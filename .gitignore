@@ -8,9 +8,9 @@ wordpress/local-config.php
 .settings
 *sublime*
 *.sass-cache*
-*compass_app_log.txt
 *debug.log*
 docs
 db
 *~
 .DS_Store
+
