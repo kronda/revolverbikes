@@ -114,7 +114,7 @@ function ninja_forms_edit_field_el_output($field_id, $type, $label = '', $name =
 		<?php
 		break;
 		case 'rte':
-			$plugin_settings = get_option( 'ninja_forms_settings' );
+			$plugin_settings = nf_get_settings();
 			if ( !isset( $plugin_settings['version_2_2_25_rte_fix'] ) OR $plugin_settings['version_2_2_25_rte_fix'] == '' ) {
 				$value = html_entity_decode( $value );
 				$plugin_settings['version_2_2_25_rte_fix'] = 1;

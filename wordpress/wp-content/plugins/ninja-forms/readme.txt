@@ -2,8 +2,8 @@
 Contributors: kstover, jameslaws, daveshine, mordauk, bftrick, helgatheviking
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 3.6
-Tested up to: 3.8
-Stable tag: 2.3.8
+Tested up to: 3.8.1
+Stable tag: 2.6
 License: GPLv2 or later
 
 Forms created with a simple drag and drop interface. Contact forms, Email collection forms, or any other form you want on your WordPress site.
@@ -76,25 +76,127 @@ For help and video tutorials, please visit our website: [Ninja Forms Documentati
 
 == Upgrade Notice ==
 
-= 2.3.8 =
-
-*Bugs:*
-
-* Fixed a bug that caused the Ninja Forms option on post/page edit to not save properly.
+= 2.6 =
 
 *Changes:*
 
-* Simplified some CSS for the star rating field.
-* Fixed some 3.8 styling on modal boxes.
-* Fixed a few typos.
-* Added a default success message to newly created forms.
-* Address fields should now how a specific class that can be targeted in JS.
+* The "Processing Message" above the form has been removed in favour of changing the text of the submit button and disabling it.
+* This change in processing notification will make it easier for users to see that a submission is being processed and prevent them from clicking the "submit" button again.
+* Updated the label of the "Processing" label to make it clearer.
+* Added a credit card field that can be enabled by extensions that need to use it.
+
+*Bugs:*
+
+* Fixed a bug introduced in version 2.5.3 which prevented Sessions from starting properly on some server setups.
+* Fixed some PHP warnings/notices.
+* List items should now properly escape html when displayed.
 
 == Requested Features ==
 
 If you have any feature requests, please feel free to visit [ninjaforms.com](http://ninjaforms.com) and let us know about it.
 
 == Changelog ==
+
+= 2.6 =
+
+*Changes:*
+
+* The "Processing Message" above the form has been removed in favour of changing the text of the submit button and disabling it.
+* This change in processing notification will make it easier for users to see that a submission is being processed and prevent them from clicking the "submit" button again.
+* Updated the label of the "Processing" label to make it clearer.
+* Added a credit card field that can be enabled by extensions that need to use it.
+
+*Bugs:*
+
+* Fixed a bug introduced in version 2.5.3 which prevented Sessions from starting properly on some server setups.
+* Fixed some PHP warnings/notices.
+* List items should now properly escape html when displayed.
+
+= 2.5.3 =
+
+*Bugs:*
+
+* Fixed a bug that could prevent AJAX submissions from working properly.
+
+= 2.5.2 =
+
+*Bugs:*
+
+* Fixed various bugs with the default label position. It should now always default to above.
+* Fixed a bug that could cause Admin emails to appear to have attachments when they didn't.
+* Required fields can now have a value of 0.
+* Fixed a bug with list fields and calculations that could cause them not to pre-populate properly.
+* Fixed a bug that could cause incomplete submissions to show in the dashboard for those using the Save Progress extension or the Multi-Part Forms extension.  
+
+= 2.5.1 =
+
+*Bugs:*
+
+* Fixed a major bug that removed the "Number" field.
+
+= 2.5 =
+
+*Features:*
+
+* Submission Limiting - Allows users to limit the number of submissions a form can receive.
+* Character Counts - Added a "Character Count" option to textboxes and textareas.
+
+*Bugs:*
+
+* Fixed a bug that prevented the pagination from working on view submission pages.
+* Fixed a bug with the default value filter.
+* Fixed a bug that prevented forms from showing when they were on the landing page of another form.
+* Fixed a bug that caused required fields to go unprocessed when extensions were deactivated.
+* Fixed a bug that caused list fields to pre-populate incorrectly in some instances.
+* Removed some console logs that could cause crashes in Internet Explorer.
+* Fixed a bug that caused forms to improperly clear when submitted.
+* Fixed a bug that prevented empty success messages from being saved.
+
+*Changes:*
+
+* Add some CSS to help prevent theme from breaking left and right labels when they add display:block to the label element.
+* All settings are now fetched via a proxy function.
+* Added a wrapper for the entire form display (and everything that goes with it).
+
+= 2.4.2 =
+
+*Bugs:*
+
+* Fixed a bug that caused memory issues when a form has a large number of submissions.
+* Fixed a bug with the label inside position that generated a “call to member function…” error.
+* Fixed a bug that prevented tax totals from working properly with numbers with thousands separators.
+* Fixed a bug that prevented list importing from working with newly created list fields.
+* Fixed a bug with list fields that prevented list options from being re-ordered immediately after being added to the form.
+
+*Changes:*
+
+* Required fields that use the “inside” label position will now show the required symbol inside the field with the label.
+* Changed the default value filter to respect fields that shouldn’t be processed.
+* Removed code from the field class function that was specific to Conditional Logic. This code should be housed in the extension rather than the core plugin.
+
+= 2.4.1 =
+
+*Bugs:*
+
+* Fixed a bug that prevented the Inside label position from working properly on form load.
+* Fixed an issue that could cause the conditional logic extension to function improperly on load.
+
+= 2.4 =
+
+*Features:*
+
+* A new method for loading Ninja Forms for display has been created to decrease loading times. Users with extremely large forms (100+ fields) should see a marked improvement in loading speeds. If you use any Ninja Forms extensions, make sure that they are updated to the newest versions to take advantage of this new loading system. Developers can look for the $ninja_forms_loading class for more information about using this powerful new feature.
+* Added a new Number field that requires users to enter a number. (Work is currently being done to make this requirement work with non-HTML5 compliant browers.)
+
+*Bugs:*
+
+* Fixed a bug that prevented Custom default values from working with hidden fields.
+* Encoded HTML entities in the help hover so that double quotes don’t break anything.
+
+*Changes:*
+
+* Default label position is now above the element.
+* Added filter 'ninja_forms_export_sub_pre_value' when exporting subs to access user_value before it is processed (stripslashes and if array implode_r).
 
 = 2.3.8 =
 

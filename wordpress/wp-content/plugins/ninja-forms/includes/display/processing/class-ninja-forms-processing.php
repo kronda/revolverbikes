@@ -21,7 +21,8 @@
  *		set_action('action') - Used to set the action currently being performed. ('submit', 'save', 'edit_sub').
  *
  * Submitted Values Methods:
- *		get_all_fields() - Returns an array of all the user submitted fields in the form of array('field_ID' => 'user value').
+ *		get_all_fields() - Returns an array of all the fields within a form. The return is array('field_ID' => 'user value').
+ *		get_submitted_fields() - Returns an array of just the fields that the user has submitted. The return is array('field_ID' => 'user_value').
  *		get_field_value('field_ID') - Used to access the submitted data by field_ID.
  *		update_field_value('field_ID', 'new_value') - Used to change the value submitted by the user. If the field does not exist, it will be created.
  *		remove_field_value('field_ID') - Used to delete values submitted by the user.
@@ -97,8 +98,7 @@ class Ninja_Forms_Processing {
 			return false;
 		}else{
 			$this->data['form_ID'] = $form_ID;
-			$current_user = wp_get_current_user();
-			$user_ID = $current_user->ID;
+			$user_ID = get_current_user_id();
 			if(!$user_ID){
 				$user_ID = '';
 			}
@@ -117,45 +117,41 @@ class Ninja_Forms_Processing {
 		$form_ID = $this->data['form_ID'];
 
 		//Get our plugin settings
-		$plugin_settings = get_option("ninja_forms_settings");
-		$req_field_error = $plugin_settings['req_field_error'];
+		$plugin_settings = nf_get_settings();
+		$req_field_error = __( $plugin_settings['req_field_error'], 'ninja-forms' );
 
 		if ( empty ( $this->data ) )
 			return '';
 		
 		$this->data['action'] = 'submit';
 		$this->data['form']['form_url'] = $this->get_current_url();
-		$cache = get_transient( $_SESSION['ninja_forms_transient_id'] );
+		$cache = isset( $_SESSION['ninja_forms_transient_id'] ) ? get_transient( $_SESSION['ninja_forms_transient_id'] ) : null;
 
 		// If we have fields in our $_POST object, then loop through the $_POST'd field values and add them to our global variable.
 		if ( isset ( $_POST['_ninja_forms_display_submit'] ) OR isset ( $_POST['_ninja_forms_edit_sub'] ) ) {
+			$field_results = ninja_forms_get_fields_by_form_id($form_ID);
+			//$field_results = apply_filters('ninja_forms_display_fields_array', $field_results, $form_ID);
+
+			foreach( $field_results as $field ) {
+				$data = $field['data'];
+				$field_id = $field['id'];
+				$field_type = $field['type'];
+
+				if ( isset ( $_POST['ninja_forms_field_' . $field_id ] ) ) {
+					$val = ninja_forms_stripslashes_deep( $_POST['ninja_forms_field_' . $field_id ] );
+					$this->data['submitted_fields'][] = $field_id;
+				} else {
+					$val = false;
+				}
+
+				$this->data['fields'][$field_id] = $val;
+				$field_row = ninja_forms_get_field_by_id( $field_id );
+				$field_row['data']['field_class'] = 'ninja-forms-field';
+				$this->data['field_data'][$field_id] = $field_row;
+			}
+
 			foreach($_POST as $key => $val){
-				if(substr($key, 0, 1) != '_'){
-					$process_field = strpos($key, 'ninja_forms_field_');
-					if($process_field !== false){
-						$field_ID = str_replace('ninja_forms_field_', '', $key); // Get the id # of each field.
-						$field_row = ninja_forms_get_field_by_id($field_ID);
-						if(is_array($field_row) AND !empty($field_row)){
-							if(isset($field_row['type'])){
-								$field_type = $field_row['type'];
-							}else{
-								$field_type = '';
-							}
-							if(isset($field_row['data']['req'])){
-								$req = $field_row['data']['req'];
-							}else{
-								$req = '';
-							}
-
-							$val = ninja_forms_stripslashes_deep( $val );
-							//$val = ninja_forms_esc_html_deep( $val );
-
-							$this->data['fields'][$field_ID] = $val;
-							$field_row = ninja_forms_get_field_by_id( $field_ID );
-							$this->data['field_data'][$field_ID] = $field_row;
-						}
-					}
-				}else{
+				if(substr($key, 0, 1) == '_'){
 					$this->data['extra'][$key] = $val;
 				}
 			}
@@ -212,6 +208,8 @@ class Ninja_Forms_Processing {
 						} else {
 							$field_row = ninja_forms_get_field_by_id( $field_id );
 						}
+
+						$field_row['data']['field_class'] = 'ninja-forms-field';
 						
 						$this->data['field_data'][$field_id] = $field_row;
 					}
@@ -291,7 +289,7 @@ class Ninja_Forms_Processing {
 	}
 
 	/**
-	 * Retrieve all the user submitted form data.
+	 * Retrieve all the fields attached to a form.
 	 *
 	 */
 	function get_all_fields() {
@@ -299,6 +297,25 @@ class Ninja_Forms_Processing {
 			return false;
 		}else{
 			return $this->data['fields'];
+		}
+	}
+
+	/**
+	 * Retrieve all the user submitted form data.
+	 *
+	 */
+	function get_all_submitted_fields() {
+		if ( empty( $this->data['submitted_fields'] ) ) {
+			return false;
+		} else {
+			$fields = array();
+			$submitted_fields = $this->data['submitted_fields'];
+			foreach ( $submitted_fields as $field_id ) {
+				if ( isset ( $this->data['fields'][$field_id] ) ) {
+					$fields[$field_id] = $this->data['fields'][$field_id];
+				}
+			}
+			return $fields;
 		}
 	}
 
@@ -360,7 +377,7 @@ class Ninja_Forms_Processing {
 	 * @return $value or bool(false)
 	 */
 	function get_field_setting( $field_id = '', $setting_id = '' ) {
-		if ( empty ( $this->data ) OR $field_id == '' OR $setting_id = '' )
+		if ( empty ( $this->data ) OR $field_id == '' OR $setting_id == '' )
 			return false;
 		if ( isset ( $this->data['field_data'][$field_id][$setting_id] ) ) {
 			return $this->data['field_data'][$field_id][$setting_id];
@@ -394,7 +411,7 @@ class Ninja_Forms_Processing {
 	function update_field_setting( $field_id = '', $setting_id = '', $value = '' ) {
 		if( empty( $this->data ) OR $field_id == '' OR $setting_id == '' OR $value == '' )
 			return false;
-
+		
 		if ( isset ( $this->data['field_data'][$field_id][$setting_id] ) ) {
 			$this->data['field_data'][$field_id][$setting_id] = $value;
 		} else {
@@ -957,6 +974,15 @@ class Ninja_Forms_Processing {
 		}
 		// Get our sub-total if it exists.
 		$sub_total = $this->get_calc_sub_total( false );
+		$locale_info = localeconv();
+		$decimal_point = $locale_info['decimal_point'];
+		if ( $decimal_point == '.' ) {
+			$sub_total = str_replace(',', '', $sub_total );
+		} else {
+			$sub_total = str_replace('.', '', $sub_total );
+		}
+
+		$sub_total = intval( $sub_total );
 
 		// Get our total if it exists.
 		$total = $this->get_calc_total( false, false );
@@ -1032,7 +1058,8 @@ class Ninja_Forms_Processing {
 
 		$tmp_array = array();
 		// Loop through the fields
-		foreach ( $this->data['field_data'] as $field ) {
+		foreach ( $this->data['fields'] as $field_id => $user_value ) {
+			$field = $this->data['field_data'][$field_id];
 			$field_value = $this->get_field_value( $field['id'] );
 			// We don't want our field to be added if it's a tax field.
 			if ( $field['type'] != '_tax' ) {
