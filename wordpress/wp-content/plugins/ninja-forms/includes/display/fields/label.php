@@ -106,7 +106,7 @@ function ninja_forms_display_label_inside( $data, $field_id ){
 		$req_symbol = '*';
 	}
 
-	if ( isset ( $data['req'] ) and $data['req'] == 1 and $data['label_pos'] == 'inside' ) {
+	if ( isset ( $data['req'] ) and $data['req'] == 1 and $label_pos == 'inside' ) {
 		$data['label'] .= ' '.$req_symbol;
 	}
 

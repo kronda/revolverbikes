@@ -1,9 +1,10 @@
 # Ninja Forms
 [Contributors](https://github.com/wpninjas/ninja-forms/graphs/contributors)
+
 Tags: form, forms, contact form, custom form, form builder, form creator, form manager, form creation, contact forms, custom forms, forms builder, forms creator, forms manager, forms creation, form administration,
 Requires at least: 3.6
-Tested up to: 3.8.1
-Stable tag: 2.5.1
+Tested up to: 3.9
+Stable tag: 2.6.1
 License: GPLv2 or later
 
 Forms created with a simple drag and drop interface. Contact forms, Email collection forms, or any other form you want on your WordPress site.
@@ -11,9 +12,8 @@ Forms created with a simple drag and drop interface. Contact forms, Email collec
 ## Description
 Ninja Forms is the ultimate FREE form creation solution for WordPress. Build WordPress Forms within minutes using Ninja Forms powerful forms creation page. It allows you to easily and quickly design complex forms through a drag and drop interface and absolutely no code. But for you developers it has a ton of hooks and filters so you can do absolutely anything with this powerful form building framework.
 
-This review of Ninja Forms was done by Pippin Williamson:
+This [review of Ninja Forms](http://www.youtube.com/watch?v=hVfPmKzqYpk) was done by Pippin Williamson:
 
-[youtube http://www.youtube.com/watch?v=hVfPmKzqYpk]
 
 Here are just a few of the things you will find in Ninja Forms:
 

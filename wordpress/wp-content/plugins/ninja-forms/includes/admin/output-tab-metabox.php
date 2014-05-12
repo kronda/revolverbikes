@@ -389,6 +389,7 @@ function ninja_forms_output_tab_metabox($form_id = '', $slug, $metabox){
 						if( $s_display_function != '' ){
 							$arguments['form_id'] = $form_id;
 							$arguments['data'] = $current_settings;
+							$arguments['field'] = $s;
 							call_user_func_array( $s_display_function, $arguments );
 						}
 					}

@@ -83,6 +83,9 @@ function ninja_forms_field_credit_card_display( $field_id, $data ) {
 	$field_class = ninja_forms_get_field_class( $field_id );
 	$post_field = apply_filters( 'ninja_forms_post_credit_card_field', false );
 	$desc_pos = apply_filters( 'ninja_forms_credit_card_field_desc_pos', 'after_label' );
+	$hide_cc_fields = apply_filters( 'ninja_forms_hide_cc_field', array() );
+	
+	if( !in_array( 'number' , $hide_cc_fields ) ){
 	?>
 		<div class="ninja-forms-credit-card-number label-<?php echo $label_pos; ?> field-wrap"> <!-- Open Credit Card Wrap -->
 			<?php
@@ -132,6 +135,12 @@ function ninja_forms_field_credit_card_display( $field_id, $data ) {
 			}
 			?>
 		</div>
+	<?php
+	
+	}
+	if( !in_array( 'cvc' , $hide_cc_fields ) ){
+	
+	?>
 		<div class="ninja-forms-credit-card-cvc label-<?php echo $label_pos; ?> field-wrap"> <!-- [open_cvc_wrap] -->
 			<?php
 			if ( $desc_pos == 'before_label' or $desc_pos == 'before_everything' ) {
@@ -181,6 +190,13 @@ function ninja_forms_field_credit_card_display( $field_id, $data ) {
 			}
 			?>
 		</div>
+	<?php
+	
+	}
+	if( !in_array( 'name' , $hide_cc_fields ) ){
+	
+	?>	
+		
 		<div class="ninja-forms-credit-card-name label-<?php echo $label_pos; ?> field-wrap"> <!-- [open_nameoncard_wrap] -->
 			<?php
 			if ( $desc_pos == 'before_label' or $desc_pos == 'before_everything' ) {
@@ -230,6 +246,13 @@ function ninja_forms_field_credit_card_display( $field_id, $data ) {
 			}
 			?>
 		</div>
+		
+	<?php
+	
+	}
+	if( !in_array( 'expires' , $hide_cc_fields ) ){
+	
+	?>
 		<div class="ninja-forms-credit-card-exp-month label-<?php echo $label_pos; ?> field-wrap"> <!-- [open_expires_wrap] -->
 			<?php
 			if ( $desc_pos == 'before_label' or $desc_pos == 'before_everything' ) {
@@ -278,8 +301,8 @@ function ninja_forms_field_credit_card_display( $field_id, $data ) {
 				}
 			}
 			?>
-		</div> <!-- [close_exp_year_wrap] -->
-		<div class="ninja-forms-credit-card-exp-year label-<?php echo $label_pos; ?> field-wrap"> <!-- [open_expires_wrap] -->
+		</div> <!-- [close_exp_month_wrap] -->
+		<div class="ninja-forms-credit-card-exp-year label-<?php echo $label_pos; ?> field-wrap"> <!-- [open_exp_year_wrap] -->
 			<?php
 			if ( $desc_pos == 'before_label' or $desc_pos == 'before_everything' ) {
 				?>
@@ -329,6 +352,7 @@ function ninja_forms_field_credit_card_display( $field_id, $data ) {
 			?>
 		</div> <!-- [close_exp_month_wrap] -->
 	<?php
+	}
 }
 
 /*

@@ -50,7 +50,7 @@ function ninja_forms_email_user(){
 	}
 
 	if( $email_type !== 'plain' ){
-		$message = wpautop( $message );
+		$message = apply_filters( 'ninja_forms_user_email_message_wpautop', wpautop( $message ) );
 	}
 
 	$email_from = $email_from_name.' <'.$email_from.'>';

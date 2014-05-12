@@ -188,6 +188,16 @@ class WC_Customer {
 		}
 		return false;
 	}
+	
+	/**
+	 * Is the user a paying customer?
+	 *
+	 * @access public
+	 * @return bool
+	 */
+	function is_paying_customer( $user_id ) {
+		return '1' === get_user_meta( $user_id, 'paying_customer', true );
+	}
 
 
 	/**
@@ -612,7 +622,7 @@ class WC_Customer {
 						permissions.access_expires >= %s
 					)
 				GROUP BY permissions.download_id
-				ORDER BY permissions.order_id, permissions.product_id, permissions.download_id;
+				ORDER BY permissions.order_id, permissions.product_id, permissions.permission_id;
 				", get_current_user_id(), date( 'Y-m-d', current_time( 'timestamp' ) ) ) );
 
 			if ( $results ) {

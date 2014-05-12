@@ -685,11 +685,11 @@ jQuery(document).ready(function(jQuery) {
 	});
 }); //End document.ready
 
-function ninja_forms_before_submit(formData, jqForm, options){
+function ninja_forms_before_submit( formData, jqForm, options ){
 	var form_id = jQuery( jqForm ).prop( 'id' ).replace( 'ninja_forms_form_', '' );
 	jQuery( '#nf_submit_' + form_id ).hide();
 	jQuery( '#nf_processing_' + form_id ).show();
-
+	jQuery( document ).data( 'submit_action', 'submit' );
 	var result = jQuery(jqForm).triggerHandler('beforeSubmit', [ formData, jqForm, options ]);
 	if ( result !== false ) {
 		result = jQuery('body').triggerHandler('beforeSubmit', [ formData, jqForm, options ]);
@@ -742,6 +742,7 @@ function ninja_forms_default_before_submit(formData, jqForm, options){
 	jQuery("#ninja_forms_form_" + form_id + "_response_msg").removeClass("ninja-forms-success-msg");
 	jQuery(".ninja-forms-field-error").prop("innerHTML", "");
 	jQuery(".ninja-forms-error").removeClass("ninja-forms-error");
+
 	return true;
 }
 

@@ -795,7 +795,7 @@ class WC_Cart {
 
 			// Check product is_purchasable
 			if ( ! $product_data->is_purchasable() ) {
-				wc_add_notice( sprintf( __( 'Sorry, &quot;%s&quot; cannot be purchased.', 'woocommerce' ), $product_data->get_title() ), 'error' );
+				wc_add_notice( __( 'Sorry, this product cannot be purchased.', 'woocommerce' ), 'error' );
 				return false;
 			}
 
@@ -1113,7 +1113,7 @@ class WC_Cart {
 						$taxes             = $this->tax->calc_tax( $line_price, $base_tax_rates, true, true );
 
 						// Now we have a new item price (excluding TAX)
-						$line_subtotal     = $line_price - array_sum( $taxes );
+						$line_subtotal     = round( $line_price - array_sum( $taxes ), WC_ROUNDING_PRECISION );
 
 						// Now add modifed taxes
 						$taxes             = $this->tax->calc_tax( $line_subtotal, $item_tax_rates );
@@ -1356,6 +1356,22 @@ class WC_Cart {
 		}
 
 		/**
+		 * Should the shipping address form be shown
+		 * 
+		 * @return bool
+		 */
+		function needs_shipping_address() {
+
+			$needs_shipping_address = false;
+
+			if ( WC()->cart->needs_shipping() === true && ! WC()->cart->ship_to_billing_address_only() ) {
+				$needs_shipping_address = true;
+			}
+
+			return apply_filters( 'woocommerce_cart_needs_shipping_address', $needs_shipping_address );
+		}
+
+		/**
 		 * Sees if the customer has entered enough data to calc the shipping yet.
 		 *
 		 * @return bool
@@ -1471,7 +1487,7 @@ class WC_Cart {
 
 						// Usage limits per user - check against billing and user email and user ID
 						if ( $coupon->usage_limit_per_user > 0 ) {
-							$used_by = get_post_meta( $this->id, '_used_by' );
+							$used_by = (array) get_post_meta( $this->id, '_used_by' );
 
 							if ( is_user_logged_in() ) {
 								$current_user   = wp_get_current_user();
@@ -1479,11 +1495,11 @@ class WC_Cart {
 							}
 							$check_emails[] = $posted['billing_email'];
 							$check_emails   = array_map( 'sanitize_email', array_map( 'strtolower', $check_emails ) );
-
 							$usage_count    = sizeof( array_keys( $used_by, get_current_user_id() ) );
 
-							foreach ( $check_emails as $check_email )
+							foreach ( $check_emails as $check_email ) {
 								$usage_count    = $usage_count + sizeof( array_keys( $used_by, $check_email ) );
+							}
 
 							if ( $usage_count >= $coupon->usage_limit_per_user ) {
 								$coupon->add_coupon_message( WC_Coupon::E_WC_COUPON_USAGE_LIMIT_REACHED );
@@ -1798,7 +1814,7 @@ class WC_Cart {
 		}
 
  	/*-----------------------------------------------------------------------------------*/
-	/* Fees API to add additonal costs to orders */
+	/* Fees API to add additional costs to orders */
 	/*-----------------------------------------------------------------------------------*/
 
 		/**

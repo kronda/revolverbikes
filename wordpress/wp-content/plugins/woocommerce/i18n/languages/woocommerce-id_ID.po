@@ -6,14 +6,16 @@
 # disaada <bafridas121296@gmail.com>, 2014
 # globalaperta <globalaperta@gmail.com>, 2014
 # globalaperta <globalaperta@gmail.com>, 2014
+# jhn_rustan <jhn_rustan@yahoo.com>, 2014
 # globalaperta <globalaperta@gmail.com>, 2014
+# SeaBiz <seabiz@hotmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce\n"
 "Report-Msgid-Bugs-To: https://github.com/woothemes/woocommerce/issues\n"
 "POT-Creation-Date: 2014-03-24 12:16:53+00:00\n"
-"PO-Revision-Date: 2014-03-25 08:32+0000\n"
-"Last-Translator: mikejolley <mike.jolley@me.com>\n"
+"PO-Revision-Date: 2014-04-25 04:14+0000\n"
+"Last-Translator: jhn_rustan <jhn_rustan@yahoo.com>\n"
 "Language-Team: Indonesian (Indonesia) (http://www.transifex.com/projects/p/woocommerce/language/id_ID/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5826,7 +5828,7 @@ msgstr ""
 
 #: includes/emails/class-wc-email-customer-note.php:38
 msgid "A note has been added to your order"
-msgstr ""
+msgstr "Penambahan Catatan penting pada pemesanan anda"
 
 #: includes/emails/class-wc-email-customer-processing-order.php:26
 msgid "Processing order"
@@ -6090,7 +6092,7 @@ msgstr "Deskripsi metode pembayaran yang akan dilihat pelanggan di website anda.
 #: includes/gateways/cod/class-wc-gateway-cod.php:74
 #: includes/gateways/cod/class-wc-gateway-cod.php:81
 msgid "Pay with cash upon delivery."
-msgstr ""
+msgstr "Pembayaran pada saat pengiriman barang"
 
 #: includes/gateways/cod/class-wc-gateway-cod.php:80
 msgid "Instructions that will be added to the thank you page."
@@ -6098,7 +6100,7 @@ msgstr "Instruksi akan ditambahkan di halaman terima kasih."
 
 #: includes/gateways/cod/class-wc-gateway-cod.php:85
 msgid "Enable for shipping methods"
-msgstr ""
+msgstr "Aktifkan metode pengiriman"
 
 #: includes/gateways/cod/class-wc-gateway-cod.php:90
 msgid ""
@@ -6838,7 +6840,7 @@ msgstr ""
 #: includes/shortcodes/class-wc-shortcode-checkout.php:117
 #: includes/shortcodes/class-wc-shortcode-checkout.php:168
 msgid "Sorry, this order is invalid and cannot be paid for."
-msgstr ""
+msgstr "Maaf, pesanan ini tidak valid oleh karena itu tidak dapat dilakukan pembayaran."
 
 #: includes/shortcodes/class-wc-shortcode-checkout.php:134
 #: templates/checkout/thankyou.php:40
@@ -6922,7 +6924,7 @@ msgstr "Maaf, kami tidak menemukan ID pesanan di database kami."
 
 #: includes/wc-cart-functions.php:25
 msgid "This product is protected and cannot be purchased."
-msgstr ""
+msgstr "Produk ini dilindungi dan tidak dapat dibeli."
 
 #: includes/wc-cart-functions.php:83
 msgid "Added &quot;%s&quot; to your cart."
@@ -7689,7 +7691,7 @@ msgstr "Tagihan &amp; Pengiriman"
 
 #: templates/checkout/form-billing.php:19
 msgid "Billing Details"
-msgstr ""
+msgstr "Detil Tagihan"
 
 #: templates/checkout/form-billing.php:38
 msgid "Create an account?"

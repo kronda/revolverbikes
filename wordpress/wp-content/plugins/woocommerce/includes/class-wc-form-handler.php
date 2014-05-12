@@ -163,9 +163,9 @@ class WC_Form_Handler {
 
 		$account_first_name = ! empty( $_POST[ 'account_first_name' ] ) ? wc_clean( $_POST[ 'account_first_name' ] ) : '';
 		$account_last_name  = ! empty( $_POST[ 'account_last_name' ] ) ? wc_clean( $_POST[ 'account_last_name' ] ) : '';
-		$account_email      = ! empty( $_POST[ 'account_email' ] ) ? wc_clean( $_POST[ 'account_email' ] ) : '';
-		$pass1              = ! empty( $_POST[ 'password_1' ] ) ? wc_clean( $_POST[ 'password_1' ] ) : '';
-		$pass2              = ! empty( $_POST[ 'password_2' ] ) ? wc_clean( $_POST[ 'password_2' ] ) : '';
+		$account_email      = ! empty( $_POST[ 'account_email' ] ) ? sanitize_email( $_POST[ 'account_email' ] ) : '';
+		$pass1              = ! empty( $_POST[ 'password_1' ] ) ? $_POST[ 'password_1' ] : '';
+		$pass2              = ! empty( $_POST[ 'password_2' ] ) ? $_POST[ 'password_2' ] : '';
 
 		$user->first_name   = $account_first_name;
 		$user->last_name    = $account_last_name;
@@ -517,7 +517,7 @@ class WC_Form_Handler {
 				$order->cancel_order( __('Order cancelled by customer.', 'woocommerce' ) );
 
 				// Message
-				wc_add_notice( __( 'Your order was cancelled.', 'woocommerce' ) );
+				wc_add_notice( apply_filters( 'woocommerce_order_cancelled_notice', __( 'Your order was cancelled.', 'woocommerce' ) ), apply_filters( 'woocommerce_order_cancelled_notice_type', 'notice' ) );
 
 				do_action( 'woocommerce_cancelled_order', $order->id );
 
@@ -828,7 +828,7 @@ class WC_Form_Handler {
 
 				if ( 0 == wc_notice_count( 'error' ) ) {
 
-					WC_Shortcode_My_Account::reset_password( $user, wc_clean( $_POST['password_1'] ) );
+					WC_Shortcode_My_Account::reset_password( $user, $_POST['password_1'] );
 
 					do_action( 'woocommerce_customer_reset_password', $user );
 
@@ -848,16 +848,22 @@ class WC_Form_Handler {
 
 			wp_verify_nonce( $_POST['register'], 'woocommerce-register' );
 
-			if ( 'no' == get_option( 'woocommerce_registration_generate_username' ) ) {
+			if ( 'no' === get_option( 'woocommerce_registration_generate_username' ) ) {
 				$_username = $_POST['username'];
 			} else {
 				$_username = '';
 			}
 
+			if ( 'no' === get_option( 'woocommerce_registration_generate_password' ) ) {
+				$_password = $_POST['password'];
+			} else {
+				$_password = '';
+			}
+
 			try {
 
 				$validation_error = new WP_Error();
-				$validation_error = apply_filters( 'woocommerce_process_registration_errors', $validation_error, $_username, $_POST['password'], $_POST['email'] );
+				$validation_error = apply_filters( 'woocommerce_process_registration_errors', $validation_error, $_username, $_password, $_POST['email'] );
 
 				if ( $validation_error->get_error_code() ) {
 					throw new Exception( '<strong>' . __( 'Error', 'woocommerce' ) . ':</strong> ' . $validation_error->get_error_message() );
@@ -871,8 +877,8 @@ class WC_Form_Handler {
 			}
 
 			$username   = ! empty( $_username ) ? wc_clean( $_username ) : '';
-			$email      = ! empty( $_POST['email'] ) ? wc_clean( $_POST['email'] ) : '';
-			$password   = ! empty( $_POST['password'] ) ? wc_clean( $_POST['password'] ) : '';
+			$email      = ! empty( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
+			$password   = $_password;
 
 			// Anti-spam trap
 			if ( ! empty( $_POST['email_2'] ) ) {

@@ -21,6 +21,7 @@ function ninja_forms_default_value_filter( $data, $field_id ) {
 
 	if ( $default_value === false and isset ( $data['default_value'] ) ) {
 		$default_value = $data['default_value'];
+		$default_value = do_shortcode( $default_value );
 	}
 
 	if ( isset ( $ninja_forms_fields[ $field_type ]['process_field'] ) and $ninja_forms_fields[ $field_type ]['process_field'] ) {

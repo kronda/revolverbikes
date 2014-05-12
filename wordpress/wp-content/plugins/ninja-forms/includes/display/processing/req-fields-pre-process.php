@@ -43,7 +43,7 @@ function ninja_forms_req_fields_process(){
 					$req_symbol = '*';
 				}
 
-				if ( isset ( $field_data['req'] ) and $field_data['req'] == 1 and $field_data['label_pos'] == 'inside' ) {
+				if ( isset ( $field_data['req'] ) and $field_data['req'] == 1 and $label_pos == 'inside' ) {
 					$field_data['label'] .= ' '.$req_symbol;
 				}
 

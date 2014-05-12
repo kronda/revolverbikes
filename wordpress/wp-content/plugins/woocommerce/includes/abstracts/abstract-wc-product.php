@@ -22,21 +22,21 @@ class WC_Product {
 	public $product_type = null;
 
 	/**
-	 * __construct function.
+	 * Constructor gets the post object and sets the ID for the loaded product.
 	 *
 	 * @access public
-	 * @param mixed $product
+	 * @param int|WC_Product|WP_Post $product Product ID, post object, or product object
 	 */
 	public function __construct( $product ) {
-		if ( $product instanceof WP_Post ) {
-			$this->id   = absint( $product->ID );
-			$this->post = $product;
+		if ( is_numeric( $product ) ) {
+			$this->id   = absint( $product );
+			$this->post = get_post( $this->id );
 		} elseif ( $product instanceof WC_Product ) {
 			$this->id   = absint( $product->id );
 			$this->post = $product;
-		} else {
-			$this->id   = absint( $product );
-			$this->post = get_post( $this->id );
+		} elseif ( $product instanceof WP_Post || isset( $product->ID ) ) {
+			$this->id   = absint( $product->ID );
+			$this->post = $product;
 		}
 	}
 
@@ -296,10 +296,12 @@ class WC_Product {
 	 * @param string $download_id file identifier
 	 * @return array|false if not found
 	 */
-	public function get_file( $download_id ) {
+	public function get_file( $download_id = '' ) {
 		$files = $this->get_files();
 
-		if ( isset( $files[ $download_id ] ) ) {
+		if ( '' === $download_id ) {
+			$file = sizeof( $files ) ? current( $files ) : false;
+		} elseif ( isset( $files[ $download_id ] ) ) {
 			$file = $files[ $download_id ];
 		} else {
 			$file = false;
@@ -1346,6 +1348,21 @@ class WC_Product {
 			'product'    => $this
 		) );
 	}
+
+    /**
+     * Gets the main product image ID.
+     * @return int
+     */
+    public function get_image_id() {
+    	if ( has_post_thumbnail( $this->id ) ) {
+			$image_id = get_post_thumbnail_id( $this->id );
+		} elseif ( ( $parent_id = wp_get_post_parent_id( $this->id ) ) && has_post_thumbnail( $parent_id ) ) {
+			$image_id = get_post_thumbnail_id( $parent_id );
+		} else {
+			$image_id = 0;
+		}
+		return $image_id;
+    }
 
 	/**
 	 * Returns the main product image

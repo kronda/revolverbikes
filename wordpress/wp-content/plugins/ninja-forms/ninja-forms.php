@@ -3,7 +3,7 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 2.6
+Version: 2.6.2
 Author: The WP Ninjas
 Author URI: http://ninjaforms.com
 Text Domain: ninja-forms
@@ -54,7 +54,7 @@ global $wpdb, $wp_version;
 
 define("NINJA_FORMS_DIR", WP_PLUGIN_DIR."/".basename( dirname( __FILE__ ) ) );
 define("NINJA_FORMS_URL", plugins_url()."/".basename( dirname( __FILE__ ) ) );
-define("NINJA_FORMS_VERSION", "2.6");
+define("NINJA_FORMS_VERSION", "2.6.2");
 define("NINJA_FORMS_TABLE_NAME", $wpdb->prefix . "ninja_forms");
 define("NINJA_FORMS_FIELDS_TABLE_NAME", $wpdb->prefix . "ninja_forms_fields");
 define("NINJA_FORMS_FAV_FIELDS_TABLE_NAME", $wpdb->prefix . "ninja_forms_fav_fields");
@@ -117,6 +117,7 @@ require_once( NINJA_FORMS_DIR . "/includes/display/form/close-form-tag.php" );
 require_once( NINJA_FORMS_DIR . "/includes/display/form/hidden-fields.php" );
 require_once( NINJA_FORMS_DIR . "/includes/display/form/form-visibility.php" );
 require_once( NINJA_FORMS_DIR . "/includes/display/form/sub-limit.php" );
+require_once( NINJA_FORMS_DIR . "/includes/display/form/nonce.php" );
 require_once( NINJA_FORMS_DIR . "/includes/display/fields/restore-progress.php" );
 require_once( NINJA_FORMS_DIR . "/includes/display/fields/inside-label-hidden.php" );
 require_once( NINJA_FORMS_DIR . "/includes/display/fields/field-type.php" );

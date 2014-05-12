@@ -629,7 +629,7 @@ function ninja_forms_field_filter_list_data( $form_id ){
 	if ( isset ( $ninja_forms_loading ) ) {
 		$all_fields = $ninja_forms_loading->get_all_fields();
 	} else {
-		$all_fields = $ninja_forms_processing->get_all_fields();
+		return false;
 	}
 
 	// Make sure we have some fields before displaying them!
@@ -644,9 +644,9 @@ function ninja_forms_field_filter_list_data( $form_id ){
 		if ( isset ( $ninja_forms_loading ) ) {
 			$field = $ninja_forms_loading->get_field_settings( $field_id );
 		} else {
-			$field = $ninja_forms_processing->get_field_settings( $field_id );
+			// $field = $ninja_forms_processing->get_field_settings( $field_id );
 		}
-		
+
 		$field_type = $field['type'];
 		$data = $field['data'];
 		// Check to see if we are working with a list. If so, filter the default_value
@@ -674,12 +674,12 @@ function ninja_forms_field_filter_list_data( $form_id ){
 					$ninja_forms_loading->update_field_value( $field_id, $tmp_array );
 				}
 			} else {
-				if ( !$ninja_forms_processing->get_field_value( $field_id ) ) {
-					$ninja_forms_processing->update_field_value( $field_id, $tmp_array );
-				}
+				// if ( !$ninja_forms_processing->get_field_value( $field_id ) ) {
+				// 	$ninja_forms_processing->update_field_value( $field_id, $tmp_array );
+				// }
 			}			
 		}
 	}
 }
 
-add_action( 'ninja_forms_display_pre_init', 'ninja_forms_field_filter_list_data' );
+add_action( 'ninja_forms_display_pre_init', 'ninja_forms_field_filter_list_data', 8 );
