@@ -1,0 +1,453 @@
+# Copyright (C) 2014 thethemefoundry, dstrojny, jupiterwise, scottrrollo, tollmanz
+# This file is distributed under the same license as the Make Plus package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Make Plus 1.0.0\n"
+"Report-Msgid-Bugs-To: https://thethemefoundry.com/support\n"
+"POT-Creation-Date: 2014-05-22 22:29:20+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: The Theme Foundry\n"
+"Language-Team: The Theme Foundry\n"
+
+#: components/woocommerce/class-section-definitions.php:195
+msgid "1"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:196
+msgid "2"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:197
+msgid "3"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:198
+msgid "4"
+msgstr ""
+
+#: components/customizer/customizer.php:159
+msgid "White Label"
+msgstr ""
+
+#: components/customizer/customizer.php:180
+msgid "Hide theme credit"
+msgstr ""
+
+#: components/per-page/class-metabox.php:104
+msgid "Layout Settings"
+msgstr ""
+
+#: components/per-page/class-metabox.php:130
+msgid "Check the box next to a global setting to override it."
+msgstr ""
+
+#: components/per-page/class-metabox.php:159
+#: components/per-page/class-metabox.php:250
+#: components/per-page/class-metabox.php:334
+#: components/woocommerce/layout-product.php:42
+#: components/woocommerce/layout-shop.php:42
+msgid "Header, Footer, Sidebars"
+msgstr ""
+
+#: components/per-page/class-metabox.php:163
+#: components/per-page/class-metabox.php:255
+#: components/per-page/class-metabox.php:338
+#: components/woocommerce/layout-product.php:63
+#: components/woocommerce/layout-shop.php:63
+msgid "Hide site header"
+msgstr ""
+
+#: components/per-page/class-metabox.php:171
+#: components/per-page/class-metabox.php:263
+#: components/per-page/class-metabox.php:346
+#: components/woocommerce/layout-product.php:84
+#: components/woocommerce/layout-shop.php:84
+msgid "Hide site footer"
+msgstr ""
+
+#: components/per-page/class-metabox.php:179
+#: components/per-page/class-metabox.php:271
+#: components/per-page/class-metabox.php:354
+#: components/woocommerce/layout-product.php:105
+#: components/woocommerce/layout-shop.php:105
+msgid "Show left sidebar"
+msgstr ""
+
+#: components/per-page/class-metabox.php:187
+#: components/per-page/class-metabox.php:279
+#: components/per-page/class-metabox.php:362
+#: components/woocommerce/layout-product.php:126
+#: components/woocommerce/layout-shop.php:126
+msgid "Show right sidebar"
+msgstr ""
+
+#: components/per-page/class-metabox.php:192
+#: components/per-page/class-metabox.php:293
+msgid "Featured Images"
+msgstr ""
+
+#: components/per-page/class-metabox.php:200
+#: components/per-page/class-metabox.php:301
+msgid "Post Date"
+msgstr ""
+
+#: components/per-page/class-metabox.php:208
+#: components/per-page/class-metabox.php:309
+msgid "Post Author"
+msgstr ""
+
+#: components/per-page/class-metabox.php:216
+msgid "Post Meta"
+msgstr ""
+
+#: components/per-page/class-metabox.php:220
+msgid "Show categories"
+msgstr ""
+
+#: components/per-page/class-metabox.php:228
+msgid "Show tags"
+msgstr ""
+
+#: components/per-page/class-metabox.php:251
+msgid "Header, Footer"
+msgstr ""
+
+#: components/per-page/class-metabox.php:284
+msgid "Page Title"
+msgstr ""
+
+#: components/per-page/class-metabox.php:288
+msgid "Hide title"
+msgstr ""
+
+#: components/per-page/class-metabox.php:367
+#: components/woocommerce/layout-product.php:147
+#: components/woocommerce/layout-shop.php:147
+msgid "Shop Sidebar Location"
+msgstr ""
+
+#: components/quick-start/define-templates.php:6
+msgid "800x600 pixel placeholder"
+msgstr ""
+
+#: components/quick-start/define-templates.php:13
+msgid "800x800 pixel placeholder"
+msgstr ""
+
+#: components/quick-start/define-templates.php:20
+msgid "800x1067 pixel placeholder"
+msgstr ""
+
+#: components/quick-start/define-templates.php:27
+msgid "960x540 pixel placeholder"
+msgstr ""
+
+#: components/quick-start/define-templates.php:34
+msgid "1440x750 pixel placeholder"
+msgstr ""
+
+#: components/quick-start/define-templates.php:294
+msgid "About"
+msgstr ""
+
+#: components/quick-start/define-templates.php:568
+msgid "Business"
+msgstr ""
+
+#: components/quick-start/define-templates.php:883
+msgid "Landing"
+msgstr ""
+
+#: components/quick-start/define-templates.php:1109
+msgid "Creative"
+msgstr ""
+
+#: components/quick-start/quick-start.php:130
+msgid "Quick Start"
+msgstr ""
+
+#: components/quick-start/quick-start.php:131
+msgid "Import content into this page. To begin, select a category&hellip;"
+msgstr ""
+
+#: components/quick-start/quick-start.php:145
+msgid "Import content"
+msgstr ""
+
+#: components/typekit/customizer.php:94
+msgid "Typekit Kit ID"
+msgstr ""
+
+#: components/typekit/customizer.php:107
+msgid "Reset"
+msgstr ""
+
+#: components/typekit/customizer.php:107
+msgid "Load Typekit Fonts"
+msgstr ""
+
+#: components/typekit/customizer.php:120
+msgid ""
+"For more information about Typekit integration, please see <a "
+"href=\"s%\">Make Plus' documentation</a>."
+msgstr ""
+
+#: components/typekit/customizer.php:220 components/typekit/customizer.php:276
+msgid "Typekit Fonts"
+msgstr ""
+
+#: components/typekit/customizer.php:221
+msgid "Please enter your Typekit Kit ID"
+msgstr ""
+
+#: components/typekit/customizer.php:222
+msgid "Typekit fonts could not be found. Please try again"
+msgstr ""
+
+#: components/widget-area/sidebar-management.php:103
+msgid "Sidebar"
+msgstr ""
+
+#: components/widget-area/widget-area.php:130
+#: components/widget-area/widget-area.php:163
+msgid "Convert to widget area"
+msgstr ""
+
+#: components/widget-area/widget-area.php:131
+#: components/widget-area/widget-area.php:161
+msgid "Revert to regular column"
+msgstr ""
+
+#: components/widget-area/widget-area.php:200
+msgid "Enter name here"
+msgstr ""
+
+#: components/widget-area/widget-area.php:202
+msgid ""
+"There are no widgets in this area. After saving this page, go to the Theme "
+"Customizer to manage your widgets."
+msgstr ""
+
+#: components/widget-area/widget-area.php:204
+msgid "To manage your widgets, please go to the Theme Customizer."
+msgstr ""
+
+#: components/widget-area/widget-area.php:206
+msgid "Widgets in this area:"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:67
+msgid "Display your WooCommerce products in a grid layout."
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:203
+msgid "All products"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:204
+msgid "Featured products"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:205
+msgid "Sale products"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:210
+msgid "Default sorting"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:211
+msgid "Popularity"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:212
+msgid "Average rating"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:213
+msgid "Newness"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:214
+msgid "Price: low to high"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:215
+msgid "Price: high to low"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:223
+msgid "All product categories/tags"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:232
+msgid "Product categories"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:244
+msgid "Product tags"
+msgstr ""
+
+#: components/woocommerce/class-shop-sidebar.php:52
+msgid "Shop Sidebar"
+msgstr ""
+
+#: components/woocommerce/class-shop-sidebar.php:78
+msgid "the %s in the Shop view"
+msgstr ""
+
+#: components/woocommerce/class-shop-sidebar.php:86
+msgid "and"
+msgstr ""
+
+#: components/woocommerce/class-shop-sidebar.php:90
+msgid "the %s in the Product view"
+msgstr ""
+
+#: components/woocommerce/class-shop-sidebar.php:97
+msgid ""
+"This widget area is currently disabled. Enable it in the \"Layout\" section "
+"of the Theme Customizer."
+msgstr ""
+
+#: components/woocommerce/class-shop-sidebar.php:100
+msgid ""
+"This widget area is currently used in place of %s. Change this in the "
+"\"Layout\" section of the Theme Customizer."
+msgstr ""
+
+#: components/woocommerce/layout-product.php:27
+msgid ""
+"The Product view includes single products and items attached to those "
+"products, such as images."
+msgstr ""
+
+#: components/woocommerce/layout-shop.php:27
+msgid ""
+"The Shop view includes the main shop page, product category and tag "
+"archives, the cart page, and the checkout page."
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:24
+msgid "Columns:"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:38
+msgid "Enter title here"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:44
+msgid "Show"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:55
+msgid "From"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:66
+msgid "Sort by"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:79
+msgid "Number of products to show"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:82
+msgid "To show all available products,<br> set to <code>-1</code>."
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:87
+msgid "Product display"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:90
+msgid "Show product image"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:98
+msgid "Show rating"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:106
+msgid "Show price"
+msgstr ""
+
+#: components/woocommerce/sections/builder-templates/product-grid.php:113
+msgid "Show <em>Add to cart</em> button"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:171
+msgid "Frontend Styles"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:187
+msgid "These styles can be customized in the Colors section of the %s."
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:191
+msgid "Theme Customizer"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:195
+msgid ""
+"To edit colours <code>woocommerce/assets/css/woocommerce-base.less</code> "
+"and <code>woocommerce.css</code> need to be writable. See <a "
+"href=\"http://codex.wordpress.org/Changing_File_Permissions\">the Codex</a> "
+"for more information."
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:330
+msgid "Could not compile woocommerce.less:"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:371
+msgid "Layout: Shop"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:372
+msgid "Layout: Product"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:439
+msgid "Left Sidebar"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:440
+msgid "Right Sidebar"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:441
+msgid "Neither"
+msgstr ""
+
+#: components/woocommerce/woocommerce.php:483
+msgid "Highlight Color"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Make Plus"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://thethemefoundry.com/wordpress-themes/make"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Premium addition for The Theme Foundry's Make theme."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "thethemefoundry, dstrojny, jupiterwise, scottrrollo, tollmanz"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://thethemefoundry.com"
+msgstr ""
+
+#: components/woocommerce/class-section-definitions.php:65
+msgctxt "section name"
+msgid "Products"
+msgstr ""
