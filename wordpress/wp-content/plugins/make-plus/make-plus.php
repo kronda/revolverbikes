@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Make Plus
- * Plugin URI:  https://thethemefoundry.com/wordpress-themes/make
- * Description: Premium addition for The Theme Foundry's Make theme.
- * Author:      thethemefoundry, dstrojny, jupiterwise, scottrrollo, tollmanz
- * Version:     1.0.1
+ * Plugin URI:  https://thethemefoundry.com/wordpress-themes/make/
+ * Description: A powerful paid companion plugin for the Make WordPress theme.
+ * Author:      The Theme Foundry
+ * Version:     1.0.2
  * Author URI:  https://thethemefoundry.com
  */
 
@@ -24,7 +24,7 @@ class TTFMP_App {
 	 *
 	 * @var   string    The semantically versioned plugin version number.
 	 */
-	var $version = '1.0.1';
+	var $version = '1.0.2';
 
 	/**
 	 * File path to the plugin dir (e.g., /var/www/mysite/wp-content/plugins/make-plus).

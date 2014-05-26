@@ -4,7 +4,7 @@ Donate link: https://thethemefoundry.com
 Tags: woocommerce, sidebars, widgets, customizer, fonts, typekit, demo content, page builder
 Requires at least: 3.9
 Tested up to: 3.9.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,12 @@ For more information, please see the [Make Plus support page](https://thethemefo
 
 == Changelog ==
 
+= 1.0.2 =
+
+* Fixed string handling issue that caused a broken Customizer
+* Fixed a broken link to documentation
+* Updated plugin metadata
+
 = 1.0.1 =
 
 * Improved handling of $post object when filtering view values
@@ -45,6 +51,10 @@ For more information, please see the [Make Plus support page](https://thethemefo
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+
+Fixes critical bug that can cause the Customizer to break
 
 = 1.0.1 =
 

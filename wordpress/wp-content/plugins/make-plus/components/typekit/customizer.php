@@ -117,7 +117,7 @@ class TTFMP_Typekit_Customizer {
 				array(
 					'section'     => 'ttfmake_font',
 					'type'        => 'text',
-					'description' => sprintf( __( 'For more information about Typekit integration, please see <a href="s%">Make Plus\' documentation</a>.', 'make-plus' ), 'https://thethemefoundry.com/tutorials/make-plus/#typekit-integration' ),
+					'description' => sprintf( __( 'For more information about Typekit integration, please see <a href="%s">Make Plus\' documentation</a>.', 'make-plus' ), 'https://thethemefoundry.com/tutorials/make/#typekit-integration' ),
 					'priority'    => 470
 				)
 			)

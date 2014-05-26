@@ -154,10 +154,10 @@ class TTFMP_Customizer {
 				$wp_customize,
 				$control_prefix . $setting_id,
 				array(
-					'section'     => $section,
-					'type'        => 'heading',
-					'label' => __( 'White Label', 'make' ),
-					'priority'    => $priority->add()
+					'section'  => $section,
+					'type'     => 'heading',
+					'label'    => __( 'White Label', 'make' ),
+					'priority' => $priority->add()
 				)
 			)
 		);
