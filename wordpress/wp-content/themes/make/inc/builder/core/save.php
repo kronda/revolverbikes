@@ -51,10 +51,14 @@ class TTFMAKE_Builder_Save {
 	 * @return TTFMAKE_Builder_Save
 	 */
 	public function __construct() {
-		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
+		// Only add filters when the builder is being saved
+		if ( isset( $_POST[ 'ttfmake-builder-nonce' ] ) && wp_verify_nonce( $_POST[ 'ttfmake-builder-nonce' ], 'save' ) && isset( $_POST['ttfmake-section-order'] ) ) {
+			// Save the post's meta data
+			add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 
-		// Combine the input into the post's content
-		add_filter( 'wp_insert_post_data', array( $this, 'wp_insert_post_data' ), 30, 2 );
+			// Combine the input into the post's content
+			add_filter( 'wp_insert_post_data', array( $this, 'wp_insert_post_data' ), 30, 2 );
+		}
 	}
 
 	/**
@@ -116,7 +120,7 @@ class TTFMAKE_Builder_Save {
 		// Call the save callback for each section
 		foreach ( $ordered_sections as $id => $values ) {
 			if ( isset( $registered_sections[ $values['section-type'] ]['save_callback'] ) && true === $this->is_save_callback_callable( $registered_sections[ $values['section-type'] ] ) ) {
-				$clean_sections[ $id ]                 = call_user_func_array( $registered_sections[ $values['section-type'] ]['save_callback'], array( $values ) );
+				$clean_sections[ $id ]                 = apply_filters( 'ttfmake_prepare_data_section', call_user_func_array( $registered_sections[ $values['section-type'] ]['save_callback'], array( $values ) ), $values, $values['section-type'] );
 				$clean_sections[ $id ]['state']        = ( isset( $values['state'] ) ) ? sanitize_key( $values['state'] ) : 'open';
 				$clean_sections[ $id ]['section-type'] = $values['section-type'];
 				$clean_sections[ $id ]['id']           = $id;
@@ -257,12 +261,30 @@ class TTFMAKE_Builder_Save {
 		}
 
 		// The data has been deleted and can be removed
-		$sanitized_sections = $this->get_sanitized_sections();
+		$sanitized_sections = apply_filters( 'ttfmake_insert_post_data_sections', $this->get_sanitized_sections() );
 		if ( empty( $sanitized_sections ) ) {
 			$data['post_content'] = '';
 			return $data;
 		}
 
+		// Generate the post content
+		$post_content = $this->generate_post_content( $sanitized_sections );
+
+		// Sanitize and set the content
+		$data['post_content'] = sanitize_post_field( 'post_content', $post_content, get_the_ID(), 'db' );
+
+		return $data;
+	}
+
+	/**
+	 * Based on section data, generate a post's post_content.
+	 *
+	 * @since  1.0.4.
+	 *
+	 * @param  array     $data    Data for sections used to comprise a page's post_content.
+	 * @return string             The post content.
+	 */
+	public function generate_post_content( $data ) {
 		// Run wpautop when saving the data
 		add_filter( 'ttfmake_the_builder_content', 'wpautop' );
 
@@ -278,15 +300,19 @@ class TTFMAKE_Builder_Save {
 		ob_start();
 
 		// For each sections, render it using the template
-		foreach ( $sanitized_sections as $section ) {
-			global $ttfmake_section_data;
+		foreach ( $data as $section ) {
+			global $ttfmake_section_data, $ttfmake_sections;
 			$ttfmake_section_data = $section;
+			$ttfmake_sections     = $data;
 
 			// Get the registered sections
 			$registered_sections = ttfmake_get_sections();
 
 			// Get the template for the section
-			get_template_part( $registered_sections[ $section['section-type'] ]['display_template'] );
+			ttfmake_load_section_template(
+				$registered_sections[ $section['section-type'] ]['display_template'],
+				$registered_sections[ $section['section-type'] ]['path']
+			);
 
 			// Cleanup the global
 			unset( $GLOBALS['ttfmake_section_data'] );
@@ -298,10 +324,7 @@ class TTFMAKE_Builder_Save {
 		// Allow constraints again after builder data processing is complete.
 		remove_filter( 'editor_max_image_size', array( &$this, 'remove_image_constraints' ) );
 
-		// Sanitize and set the content
-		$data['post_content'] = sanitize_post_field( 'post_content', $post_content, get_the_ID(), 'db' );
-
-		return $data;
+		return $post_content;
 	}
 
 	/**
@@ -407,23 +430,25 @@ class TTFMAKE_Builder_Save {
 	 * @since  1.0.0.
 	 *
 	 * @param  array    $current_section    The current section's data.
+	 * @param  array    $sections           The list of sections.
 	 * @return array                        The next section's data.
 	 */
-	public function get_next_section_data( $current_section ) {
-		$sections = $this->get_sanitized_sections();
+	public function get_next_section_data( $current_section, $sections ) {
+		$next_is_the_one = false;
+		$next_data       = array();
 
-		// Move the pointer to the current section
-		$this->set_array_pointer( $current_section['id'], $sections );
+		foreach ( $sections as $id => $data ) {
+			if ( true === $next_is_the_one ) {
+				$next_data = $data;
+				break;
+			}
 
-		// Move pointer to the next item
-		$next_section = next( $sections );
-
-		// If the section does not exist, the current section is the last section
-		if ( $next_section ) {
-			return $next_section;
-		} else {
-			return array();
+			if ( $current_section['id'] === $id ) {
+				$next_is_the_one = true;
+			}
 		}
+
+		return $next_data;
 	}
 
 	/**
@@ -432,38 +457,19 @@ class TTFMAKE_Builder_Save {
 	 * @since  1.0.0.
 	 *
 	 * @param  array    $current_section    The current section's data.
+	 * @param  array    $sections           The list of sections.
 	 * @return array                        The previous section's data.
 	 */
-	public function get_prev_section_data( $current_section ) {
-		$sections = $this->get_sanitized_sections();
-
-		// Move the pointer to the current section
-		$this->set_array_pointer( $current_section['id'], $sections );
-
-		// Move pointer to the next item
-		$previous_section = prev( $sections );
-
-		// If the section does not exist, the current section is the last section
-		if ( $previous_section ) {
-			return $previous_section;
-		} else {
-			return array();
+	public function get_prev_section_data( $current_section, $sections ) {
+		foreach ( $sections as $id => $data ) {
+			if ( $current_section['id'] === $id ) {
+				break;
+			} else {
+				$prev_key = $id;
+			}
 		}
-	}
 
-	/**
-	 * Set the pointer position in an array to a specified key.
-	 *
-	 * @since  1.0.0.
-	 *
-	 * @param  string    $key      The key position to set the array to.
-	 * @param  array     $array    The array to set. Passed by reference to affect the array outside of the function scope.
-	 * @return void
-	 */
-	public function set_array_pointer( $key, &$array ) {
-		while ( key( $array ) !== $key ) {
-			next( $array );
-		}
+		return ( isset( $prev_key ) && isset( $sections[ $prev_key ] ) ) ? $sections[ $prev_key ] : array();
 	}
 
 	/**
@@ -475,20 +481,21 @@ class TTFMAKE_Builder_Save {
 	 * @since  1.0.0.
 	 *
 	 * @param  array     $current_section    The current section's data.
+	 * @param  array     $sections           The list of sections.
 	 * @return string                        The class string.
 	 */
-	public function section_classes( $current_section ) {
+	public function section_classes( $current_section, $sections ) {
 		$prefix = 'builder-section-';
 
 		// Get the current section type
 		$current = ( isset( $current_section['section-type'] ) ) ? $prefix . $current_section['section-type'] : '';
 
 		// Get the next section's type
-		$next_data = $this->get_next_section_data( $current_section );
+		$next_data = $this->get_next_section_data( $current_section, $sections );
 		$next      = ( ! empty( $next_data ) && isset( $next_data['section-type'] ) ) ? $prefix . 'next-' . $next_data['section-type'] : $prefix . 'last';
 
 		// Get the previous section's type
-		$prev_data = $this->get_prev_section_data( $current_section );
+		$prev_data = $this->get_prev_section_data( $current_section, $sections );
 		$prev      = ( ! empty( $prev_data ) && isset( $prev_data['section-type'] ) ) ? $prefix . 'prev-' . $prev_data['section-type'] : $prefix . 'first';
 
 		// Return the values as a single string
@@ -555,3 +562,27 @@ function ttfmake_get_builder_save() {
 endif;
 
 add_action( 'admin_init', 'ttfmake_get_builder_save' );
+
+if ( ! function_exists( 'ttfmake_sanitize_image_id' ) ) :
+/**
+ * Cleans an ID for an image.
+ *
+ * Handles integer or dimension IDs. This function is necessary for handling the cleaning of placeholder image IDs.
+ *
+ * @since  1.0.0.
+ *
+ * @param  int|string    $id    Image ID.
+ * @return int|string           Cleaned image ID.
+ */
+function ttfmake_sanitize_image_id( $id ) {
+	if ( false !== strpos( $id, 'x' ) ) {
+		$pieces       = explode( 'x', $id );
+		$clean_pieces = array_map( 'absint', $pieces );
+		$id           = implode( 'x', $clean_pieces );
+	} else {
+		$id = absint( $id );
+	}
+
+	return $id;
+}
+endif;

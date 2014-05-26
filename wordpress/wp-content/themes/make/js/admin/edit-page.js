@@ -25,6 +25,7 @@
 			this.cache.$featuredImage = $('#postimagediv');
 			this.cache.$commentstatus = $('#comment_status');
 			this.cache.$pingstatus = $('#ping_status');
+			this.cache.$body = $('body');
 		},
 
 		bindEvents: function() {
@@ -52,11 +53,13 @@
 				self.cache.$builder.show();
 				self.cache.$builderHide.prop('checked', true).parent().show();
 				self.featuredImageToggle('hide');
+				self.cache.$body.addClass('ttfmake-builder-active').removeClass('ttfmake-default-active');
 			} else {
 				self.cache.$mainEditor.show();
 				self.cache.$builder.hide();
 				self.cache.$builderHide.prop('checked', false).parent().hide();
 				self.featuredImageToggle('show');
+				self.cache.$body.removeClass('ttfmake-builder-active').addClass('ttfmake-default-active');
 			}
 		},
 

@@ -10,6 +10,7 @@
 	height: 1.7em;
 	font-size: 1.5em;
 	line-height: 100%;
+	margin: 0;
 }
 .ttfmake-titlediv ::-webkit-input-placeholder {
 	line-height: 1.4em;
@@ -178,11 +179,11 @@
 	outline: none !important;
 }
 .ttfmake-section-remove {
-	margin-top: 20px;
+	margin-top: 40px;
 }
 .ttfmake-gallery-item-remove,
 .ttfmake-banner-slide-remove {
-	margin-top: 10px;
+	margin-top: 20px;
 }
 .ttfmake-section-remove:hover,
 .ttfmake-gallery-item-remove:hover,
@@ -463,20 +464,4 @@
 		top: 2px;
 		padding-left: 10px !important;
 	}
-}
-/*---------------------------------------------------------
- Button button icon CSS (html-builder.css)
--------------------------------------------------------- */
-i.mce-i-ttfmake-button-button {
-	font: normal 20px/1 'dashicons';
-	padding: 0;
-	vertical-align: top;
-	speak: none;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	margin-left: -2px;
-	padding-right: 2px;
-}
-i.mce-i-ttfmake-button-button:before {
-	content: '\f502';
 }

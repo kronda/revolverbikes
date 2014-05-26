@@ -306,5 +306,61 @@ function ttfmake_customizer_footer( $wp_customize, $section ) {
 			'priority' => $priority->add()
 		)
 	);
+
+	if ( ! ttfmake_is_plus() ) {
+		// White Label line
+		$setting_id = $setting_prefix . '-whitelabel-line';
+		$wp_customize->add_control(
+			new TTFMAKE_Customize_Misc_Control(
+				$wp_customize,
+				$control_prefix . $setting_id,
+				array(
+					'section'     => $section,
+					'type'        => 'line',
+					'priority'    => $priority->add()
+				)
+			)
+		);
+
+		// White Label heading
+		$setting_id = $setting_prefix . '-whitelabel-heading';
+		$wp_customize->add_control(
+			new TTFMAKE_Customize_Misc_Control(
+				$wp_customize,
+				$control_prefix . $setting_id,
+				array(
+					'section'     => $section,
+					'type'        => 'heading',
+					'label' => __( 'White Label', 'make' ),
+					'priority'    => $priority->add()
+				)
+			)
+		);
+
+		// White Label info
+		$setting_id = $setting_prefix . '-whitelabel-make-plus';
+		$wp_customize->add_control(
+			new TTFMAKE_Customize_Misc_Control(
+				$wp_customize,
+				$control_prefix . $setting_id,
+				array(
+					'section'     => $section,
+					'type'        => 'text',
+					'description' => sprintf(
+						__( 'Want to remove the theme byline from your website&#8217;s footer? %s.', 'make' ),
+						sprintf(
+							'<a href="%1$s" target="_blank">%2$s</a>',
+							esc_url( ttfmake_get_plus_link( 'white-label' ) ),
+							sprintf(
+								__( 'Upgrade to %1$s', 'make' ),
+								'Make Plus'
+							)
+						)
+					),
+					'priority'    => $priority->add()
+				)
+			)
+		);
+	}
 }
 endif;

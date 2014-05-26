@@ -3,11 +3,11 @@
  * @package Make
  */
 
-global $ttfmake_section_data;
+global $ttfmake_section_data, $ttfmake_sections;
 $text_columns = ttfmake_builder_get_text_array( $ttfmake_section_data );
 ?>
 
-<section id="builder-section-<?php echo esc_attr( $ttfmake_section_data['id'] ); ?>" class="builder-section<?php echo esc_attr( ttfmake_builder_get_text_class( $ttfmake_section_data ) ); ?>">
+<section id="builder-section-<?php echo esc_attr( $ttfmake_section_data['id'] ); ?>" class="builder-section<?php echo esc_attr( ttfmake_builder_get_text_class( $ttfmake_section_data, $ttfmake_sections ) ); ?>">
 	<?php if ( '' !== $ttfmake_section_data['title'] ) : ?>
 	<h3 class="builder-text-section-title">
 		<?php echo apply_filters( 'the_title', $ttfmake_section_data['title'] ); ?>
@@ -23,9 +23,10 @@ $text_columns = ttfmake_builder_get_text_array( $ttfmake_section_data );
 			endif;
 			?>
 		<div class="builder-text-column">
-			<?php if ( 0 !== absint( $column['image-id'] ) ) : ?>
+			<?php $image_html =  ttfmake_get_image( $column['image-id'], 'large' ); ?>
+			<?php if ( '' !== $image_html ) : ?>
 			<figure class="builder-text-image">
-				<?php echo $link_front . wp_get_attachment_image( $column['image-id'], 'large' ) . $link_back; ?>
+				<?php echo $link_front . $image_html . $link_back; ?>
 			</figure>
 			<?php endif; ?>
 			<?php if ( '' !== $column['title'] ) : ?>

@@ -80,6 +80,7 @@ var oneApp = oneApp || {}, $oneApp = $oneApp || jQuery(oneApp);
 			}, oneApp.options.closeSpeed, function() {
 				this.remove();
 				oneApp.sections.toggleStageClass();
+				$oneApp.trigger('afterSectionViewRemoved', this);
 			}.bind(this));
 		},
 

@@ -3,7 +3,7 @@
  * @package Make
  */
 
-global $ttfmake_section_data;
+global $ttfmake_section_data, $ttfmake_sections;
 $banner_slides = ttfmake_builder_get_banner_array( $ttfmake_section_data );
 $is_slider = ( count( $banner_slides ) > 1 ) ? true : false;
 $banner_id = ( isset( $ttfmake_section_data['id'] ) ) ? absint( $ttfmake_section_data['id'] ) : 1;
@@ -24,7 +24,7 @@ $slider_ratio = ( $slider_height / 960 ) * 100;
 		}
 	}
 </style>
-<section id="builder-section-<?php echo esc_attr( $ttfmake_section_data['id'] ); ?>" class="builder-section <?php echo esc_attr( ttfmake_builder_get_banner_class( $ttfmake_section_data ) ); ?>">
+<section id="builder-section-<?php echo esc_attr( $ttfmake_section_data['id'] ); ?>" class="builder-section <?php echo esc_attr( ttfmake_builder_get_banner_class( $ttfmake_section_data, $ttfmake_sections ) ); ?>">
 	<?php if ( '' !== $ttfmake_section_data['title'] ) : ?>
 	<h3 class="builder-banner-section-title">
 		<?php echo apply_filters( 'the_title', $ttfmake_section_data['title'] ); ?>

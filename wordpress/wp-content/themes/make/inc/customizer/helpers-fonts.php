@@ -155,7 +155,7 @@ function ttfmake_css_fonts() {
 
 		// h3
 		ttfmake_get_css()->add( array(
-			'selectors'    => array( 'h3' ),
+			'selectors'    => array( 'h3', '.builder-text-content .widget-title' ),
 			'declarations' => array(
 				'font-size-px'  => ttfmake_get_relative_font_size( $font_header_size, $percent[ 'h3' ] ) . 'px',
 				'font-size-rem' => ttfmake_convert_px_to_rem( ttfmake_get_relative_font_size( $font_header_size, $percent[ 'h3' ] ) ) . 'rem'
@@ -225,7 +225,7 @@ function ttfmake_css_fonts() {
 	if ( $font_body_size !== ttfmake_get_default( 'font-body-size' ) ) {
 		// body
 		ttfmake_get_css()->add( array(
-			'selectors'    => array( 'body', '.font-body' ),
+			'selectors'    => array( 'body', '.font-body', '.builder-text-content .widget' ),
 			'declarations' => array(
 				'font-size-px'  => $font_body_size . 'px',
 				'font-size-rem' => ttfmake_convert_px_to_rem( $font_body_size ) . 'rem'

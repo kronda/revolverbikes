@@ -27,7 +27,7 @@ $description = ( isset( $ttfmake_section_data['data']['gallery-items'][ $ttfmake
 		<input placeholder="<?php esc_attr_e( 'Enter link here', 'make' ); ?>" type="text" name="<?php echo $section_name; ?>[link]" class="ttfmake-link code widefat" value="<?php echo esc_url( $link ); ?>" autocomplete="off" />
 	</div>
 
-	<?php ttfmake_get_builder_base()->add_uploader( $section_name, absint( $image_id ) ); ?>
+	<?php ttfmake_get_builder_base()->add_uploader( $section_name, ttfmake_sanitize_image_id( $image_id ) ); ?>
 
 	<div class="ttfmake-titlediv">
 		<div class="ttfmake-titlewrap">
@@ -40,7 +40,7 @@ $description = ( isset( $ttfmake_section_data['data']['gallery-items'][ $ttfmake
 	</div>
 
 	<a href="#" class="ttfmake-gallery-item-remove">
-		<?php _e( 'Remove gallery item', 'make' ); ?>
+		<?php _e( 'Remove this item', 'make' ); ?>
 	</a>
 <?php if ( true !== $ttfmake_is_js_template ) : ?>
 </div>

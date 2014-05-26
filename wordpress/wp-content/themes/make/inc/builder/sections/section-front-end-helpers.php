@@ -59,9 +59,10 @@ function ttfmake_builder_get_gallery_array( $ttfmake_section_data ) {
  * @since  1.0.0.
  *
  * @param  array     $ttfmake_section_data    The section data.
+ * @param  array     $sections                The list of sections.
  * @return string                             The class.
  */
-function ttfmake_builder_get_gallery_class( $ttfmake_section_data ) {
+function ttfmake_builder_get_gallery_class( $ttfmake_section_data, $sections ) {
 	if ( ! ttfmake_builder_is_section_type( 'gallery', $ttfmake_section_data ) ) {
 		return '';
 	}
@@ -69,7 +70,7 @@ function ttfmake_builder_get_gallery_class( $ttfmake_section_data ) {
 	$gallery_class = ' ';
 
 	// Section classes
-	$gallery_class .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data );
+	$gallery_class .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data, $sections );
 
 	// Columns
 	$gallery_columns = ( isset( $ttfmake_section_data['columns'] ) ) ? absint( $ttfmake_section_data['columns'] ) : 1;
@@ -122,7 +123,7 @@ function ttfmake_builder_get_gallery_style( $ttfmake_section_data ) {
 
 	// Background image
 	if ( isset( $ttfmake_section_data['background-image'] ) && 0 !== absint( $ttfmake_section_data['background-image'] ) ) {
-		$image_src = wp_get_attachment_image_src( $ttfmake_section_data['background-image'], 'full' );
+		$image_src = ttfmake_get_image_src( $ttfmake_section_data['background-image'], 'full' );
 		if ( isset( $image_src[0] ) ) {
 			$gallery_style .= 'background-image: url(\'' . addcslashes( esc_url_raw( $image_src[0] ), '"' ) . '\');';
 		}
@@ -183,18 +184,18 @@ function ttfmake_builder_get_gallery_item_image( $item, $aspect ) {
 		return '';
 	}
 
-	if ( 0 === absint( $item[ 'image-id' ] ) ) {
+	if ( 0 === ttfmake_sanitize_image_id( $item[ 'image-id' ] ) ) {
 		return '';
 	}
 
 	$image_style = '';
 
-	$image_src = wp_get_attachment_image_src( $item[ 'image-id' ], 'large' );
-	if ( ! empty( $image_src ) ) {
+	$image_src = ttfmake_get_image_src( $item[ 'image-id' ], 'large' );
+	if ( isset( $image_src[0]  ) ) {
 		$image_style .= 'background-image: url(\'' . addcslashes( esc_url_raw( $image_src[0] ), '"' ) . '\');';
 	}
 
-	if ( 'none' === $aspect ) {
+	if ( 'none' === $aspect && isset( $image_src[1] ) && isset( $image_src[2] ) ) {
 		$image_ratio = ( $image_src[2] / $image_src[1] ) * 100;
 		$image_style .= 'padding-bottom: ' . $image_ratio . '%;';
 	}
@@ -253,9 +254,10 @@ function ttfmake_builder_get_text_array( $ttfmake_section_data ) {
  * @since  1.0.0.
  *
  * @param  array     $ttfmake_section_data    The section data.
+ * @param  array     $sections                The list of sections.
  * @return string                             The class.
  */
-function ttfmake_builder_get_text_class( $ttfmake_section_data ) {
+function ttfmake_builder_get_text_class( $ttfmake_section_data, $sections ) {
 	if ( ! ttfmake_builder_is_section_type( 'text', $ttfmake_section_data ) ) {
 		return '';
 	}
@@ -263,7 +265,7 @@ function ttfmake_builder_get_text_class( $ttfmake_section_data ) {
 	$text_class = ' ';
 
 	// Section classes
-	$text_class .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data );
+	$text_class .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data, $sections );
 
 	// Columns
 	$columns_number = ( isset( $ttfmake_section_data['columns-number'] ) ) ? absint( $ttfmake_section_data['columns-number'] ) : 1;
@@ -311,9 +313,10 @@ function ttfmake_builder_get_banner_array( $ttfmake_section_data ) {
  * @since  1.0.0.
  *
  * @param  array     $ttfmake_section_data    The section data.
+ * @param  array     $sections                The list of sections.
  * @return string                             The class.
  */
-function ttfmake_builder_get_banner_class( $ttfmake_section_data ) {
+function ttfmake_builder_get_banner_class( $ttfmake_section_data, $sections ) {
 	if ( ! ttfmake_builder_is_section_type( 'banner', $ttfmake_section_data ) ) {
 		return '';
 	}
@@ -321,7 +324,7 @@ function ttfmake_builder_get_banner_class( $ttfmake_section_data ) {
 	$banner_class = ' ';
 
 	// Section classes
-	$banner_class .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data );
+	$banner_class .= ttfmake_get_builder_save()->section_classes( $ttfmake_section_data, $sections );
 
 	// Banner id
 	$banner_id     = ( isset( $ttfmake_section_data['id'] ) ) ? absint( $ttfmake_section_data['id'] ) : 1;
@@ -418,8 +421,8 @@ function ttfmake_builder_banner_slide_style( $slide, $ttfmake_section_data ) {
 	}
 
 	// Background image
-	if ( isset( $slide['image-id'] ) && 0 !== absint( $slide['image-id'] ) ) {
-		$image_src = wp_get_attachment_image_src( $slide['image-id'], 'full' );
+	if ( isset( $slide['image-id'] ) && 0 !== ttfmake_sanitize_image_id( $slide['image-id'] ) ) {
+		$image_src = ttfmake_get_image_src( $slide['image-id'], 'full' );
 		if ( isset( $image_src[0] ) ) {
 			$slide_style .= 'background-image: url(\'' . addcslashes( esc_url_raw( $image_src[0] ), '"' ) . '\');';
 		}

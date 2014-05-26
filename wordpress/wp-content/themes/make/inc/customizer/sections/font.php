@@ -106,6 +106,47 @@ function ttfmake_customizer_font( $wp_customize, $section ) {
 		)
 	);
 
+	if ( false === ttfmake_is_plus() ) {
+		// Typekit information
+		$setting_id = $setting_prefix . '-typekit-font-heading';
+		$wp_customize->add_control(
+			new TTFMAKE_Customize_Misc_Control(
+				$wp_customize,
+				$control_prefix . $setting_id,
+				array(
+					'section'  => $section,
+					'type'     => 'heading',
+					'label'    => __( 'Typekit', 'make' ),
+					'priority' => 450
+				)
+			)
+		);
+
+		$setting_id = $setting_prefix . '-typekit-font-info';
+		$wp_customize->add_control(
+			new TTFMAKE_Customize_Misc_Control(
+				$wp_customize,
+				$control_prefix . $setting_id,
+				array(
+					'section'     => $section,
+					'type'        => 'text',
+					'description' => sprintf(
+						__( 'Looking to add premium fonts from Typekit to your website? %s.', 'make' ),
+						sprintf(
+							'<a href="%1$s" target="_blank">%2$s</a>',
+							esc_url( ttfmake_get_plus_link( 'typekit' ) ),
+							sprintf(
+								__( 'Upgrade to %1$s', 'make' ),
+								'Make Plus'
+							)
+						)
+					),
+					'priority'    => 460
+				)
+			)
+		);
+	}
+
 	// Font family line
 	$setting_id = $setting_prefix . '-family-line';
 	$wp_customize->add_control(

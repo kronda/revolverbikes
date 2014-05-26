@@ -120,13 +120,21 @@ function ttfmake_css_add_rules() {
 				'input[type="reset"].color-secondary-background',
 				'input[type="submit"].color-secondary-background',
 				'.sticky-post-label',
-				'.site-navigation .menu .sub-menu',
-				'.site-navigation .menu .children',
 				'.widget_tag_cloud a',
 			),
 			'declarations' => array(
 				'background-color' => $color_secondary
 			)
+		) );
+		ttfmake_get_css()->add( array(
+			'selectors'    => array(
+				'.site-navigation .menu .sub-menu',
+				'.site-navigation .menu .children',
+			),
+			'declarations' => array(
+				'background-color' => $color_secondary
+			),
+			'media'        => 'screen and (min-width: 800px)'
 		) );
 		ttfmake_get_css()->add( array(
 			'selectors'    => array(

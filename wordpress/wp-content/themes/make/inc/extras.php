@@ -245,7 +245,8 @@ function ttfmake_get_view() {
 		$view = 'page';
 	}
 
-	return $view;
+	// Filter the view and return
+	return apply_filters( 'ttfmake_get_view', $view, $parent_post_type );
 }
 endif;
 
@@ -356,3 +357,78 @@ function ttfmake_sidebar_list_enabled( $location ) {
 	return $enabled_views;
 }
 endif;
+
+/**
+ * Generate a link to the Make info page.
+ *
+ * @since  1.0.6.
+ *
+ * @param  string    $component    The component where the link is located.
+ * @return string                  The link.
+ */
+function ttfmake_get_plus_link( $component ) {
+	$url = 'https://thethemefoundry.com/wordpress-themes/make/?utm_source=make&utm_medium=link&utm_content=' . urlencode( sanitize_title_with_dashes( $component ) ) . '&utm_campaign=plus#make-table';
+	return esc_url( $url );
+}
+
+/**
+ * Add an upgrade node to the Admin bar
+ *
+ * @since 1.0.6.
+ *
+ * @return void
+ */
+function ttfmake_admin_bar_plus() {
+	if ( ttfmake_is_plus() || ! is_admin() || ! is_super_admin() || ! is_admin_bar_showing() ) {
+		return;
+	}
+
+	global $wp_admin_bar;
+
+	$args = array(
+		'id' => 'ttfmake-admin-bar-plus',
+		'title' => sprintf(
+			'<a href="%1$s" target="_blank">%2$s</a>',
+			esc_url( ttfmake_get_plus_link( 'admin-bar-badge' ) ),
+			sprintf(
+				__( 'Upgrade to %s', 'make' ),
+				'Make Plus'
+			)
+		),
+		'parent' => false
+	);
+	$wp_admin_bar->add_node( $args );
+}
+
+add_action( 'admin_bar_menu', 'ttfmake_admin_bar_plus', 99 );
+
+/**
+ * Add inline styles for custom admin bar items
+ *
+ * @since 1.0.6.
+ *
+ * @return void
+ */
+function ttfmake_admin_bar_style() {
+	if ( ttfmake_is_plus() ) {
+		return;
+	}
+	?>
+	<style type="text/css">
+		#wpadminbar .quicklinks #wp-admin-bar-ttfmake-admin-bar-plus a {
+			position: relative;
+			display: inline;
+			top: -1px;
+			margin: 0;
+			padding: 3px 6px;
+			font-size: 10px;
+			font-weight: bold;
+			color: #ffffff;
+			background-color: #d54e21;
+			letter-spacing: 1px;
+			text-transform: uppercase;
+		}
+	</style>
+<?php }
+
+add_action( 'wp_before_admin_bar_render', 'ttfmake_admin_bar_style', 99 );

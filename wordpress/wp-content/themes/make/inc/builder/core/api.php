@@ -70,7 +70,7 @@ class TTFMAKE_Sections {
 	 *
 	 * @since  1.0.0.
 	 *
-	 * @param  string    $id                  Unique ID for the section.
+	 * @param  string    $id                  Unique ID for the section. Alphanumeric characters only.
 	 * @param  string    $label               Name to display for the section.
 	 * @param  string    $description         Section description.
 	 * @param  string    $icon                URL to the icon for the display.
@@ -78,9 +78,10 @@ class TTFMAKE_Sections {
 	 * @param  string    $builder_template    Path to the template used in the builder.
 	 * @param  string    $display_template    Path to the template used for the frontend.
 	 * @param  int       $order               The order in which to display the item.
+	 * @param  string    $path                The path to the template files.
 	 * @return void
 	 */
-	public function add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order ) {
+	public function add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path ) {
 		$this->_sections[ $id ] = array(
 			'id'               => $id,
 			'label'            => $label,
@@ -90,6 +91,7 @@ class TTFMAKE_Sections {
 			'builder_template' => $builder_template,
 			'display_template' => $display_template,
 			'order'            => $order,
+			'path'             => $path,
 		);
 	}
 }
@@ -157,7 +159,7 @@ if ( ! function_exists( 'ttfmake_add_section' ) ) :
  *
  * @since  1.0.0.
  *
- * @param  string    $id                  Unique ID for the section.
+ * @param  string    $id                  Unique ID for the section. Alphanumeric characters only.
  * @param  string    $label               Name to display for the section.
  * @param  string    $description         Section description.
  * @param  string    $icon                URL to the icon for the display.
@@ -165,9 +167,10 @@ if ( ! function_exists( 'ttfmake_add_section' ) ) :
  * @param  string    $builder_template    Path to the template used in the builder.
  * @param  string    $display_template    Path to the template used for the frontend.
  * @param  int       $order               The order in which to display the item.
+ * @param  string    $path                The path to the template files.
  * @return void
  */
-function ttfmake_add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order ) {
-	ttfmake_get_sections_class()->add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order );
+function ttfmake_add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path ) {
+	ttfmake_get_sections_class()->add_section( $id, $label, $icon, $description, $save_callback, $builder_template, $display_template, $order, $path );
 }
 endif;
