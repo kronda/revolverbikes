@@ -41,6 +41,21 @@ If you have any problems with the plugin, please submit a support ticket here: h
 Change Log
 *********
 
+2.3.2 - April 2014
+- Test for WordPress 3.9
+- Change capability to view videos to just `read` than `activate_plugins`
+
+2.3.1 - March 2014
+- Fix older php warning.
+
+2.3 - March 2014
+- Minor code clean up
+- Add support for hosting clients of VUM.
+- Add DB Upgrade Class for easier VUM DB upgrages going forward.
+- Add Upgrade patch for 2.3 for VUM clients who are under a hosting serial number.
+- Change how embeded videos are called. Now via wp-admin vs a direct file call which was problematic for people with custom configurations.
+- Fix PHP 5.4 warnings
+
 2.2.6 - December 2013
 JavaScript bug showing all languages were being deprecated. 
 

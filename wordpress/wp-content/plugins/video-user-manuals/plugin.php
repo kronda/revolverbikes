@@ -3,25 +3,26 @@
 Plugin Name: Video User Manuals
 Plugin URI: http://www.videousermanuals.com/
 Description: A complete video manual for your clients
-Version: 2.2.6
+Version: 2.3.2
 Author: Video User Manuals Pty Ltd
 Author URI: http://www.videousermanuals.com
 */
 
 class Vum{
 
-    const pluginver     = '2.2.6';
+    const pluginver     = '2.3.2';
+    const ver_key       = 'wpm_o_ver';
     const vum_domain    = 'http://wordpress.videousermanuals.com/';
     const iframe_url    = '//wordpress.videousermanuals.com/json.php?jsoncallback=?';
     const activate_url  = 'http://vum2.videousermanuals.com/activate.php?serial=';
     const profile_url   = 'http://vum2.videousermanuals.com/save-profile.php';
     const prefs_url     = 'http://vum2.videousermanuals.com/prefs.php?';
+    const api_url       = 'http://vum2.videousermanuals.com/api.php';
 
-    private $serial; // Serial Number or False if none
-    var $form, $formPrefs, $WPLang, $pluginURL; // Holds the form data
+    var $serial, $form, $formPrefs, $WPLang, $pluginURL; // Holds the form data
 
-    function __construct()
-    {
+    function __construct() {
+
         // Set serial to use throughout
         $this->serial = get_option('wpm_o_user_id');
 
@@ -31,326 +32,431 @@ class Vum{
         // Get lang of what WP is running
         $lang = explode( '-', get_bloginfo('language') );
         $this->WPLang = $lang[0];
-        
+
         // Set the WP Domain / site url and parse it
-        $domain = parse_url( get_option( 'siteurl' ) ); 
+        $domain = parse_url( get_option( 'siteurl' ) );
         $this->domain = $domain[ 'host' ];
-        
+
         add_action( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_links' ) );
 
         // Need to ensure the prefs are set as we need them to build the view if not in english!
         if( !get_option('wpm_o_form_prefs') ) {
             $this->update_prefs();
         }
-        
-        
-        add_action( 'admin_head', array( $this, 'admin_head' ) );
 
-        add_action('admin_menu', array( $this,'add_pages' ) );
-        add_action('admin_enqueue_scripts', array( $this, 'admin_scripts') );
-        add_action('admin_init', array( $this, 'admin_init' ) );
-        add_action ( 'install_plugins_pre_plugin-information' , array( $this, 'update_plugin' ) );
+        add_action( 'wp_head', array( $this, 'wp_head' ) );
+        add_action( 'admin_head', array( $this, 'admin_head' ) );
+        add_action( 'admin_menu', array( $this,'add_pages' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts') );
+        add_action( 'admin_init', array( $this, 'admin_init' ) );
+        add_action( 'install_plugins_pre_plugin-information' , array( $this, 'update_plugin' ) );
+
         register_activation_hook( __FILE__, array( $this, 'install' ) );
     }
- 
-    function admin_scripts()
-    {
-        wp_enqueue_script('jquery');
-        wp_enqueue_script('jquery-ui');
-        wp_enqueue_script('jquery-ui-tabs');
-    }
-    
-    /* Adds plugin action links used to reset. */
-    function plugin_links( $links )
-    {
-	$new_links = array();
-	$new_links[] = '<a href="' . admin_url('options-general.php?page=vum-reset').'">' .  $this->terms( 'Reset' ) . '</a>';
-	return array_merge($new_links, $links);
-    }
 
-    function admin_head() {
-        
-        // This code is only required on WordPress 3.8+
-        if( version_compare( get_bloginfo( 'version' ) , '3.8-beta' , '<' )  )
+    function wp_head() {
+
+        // Only show if a child acount
+        if( ! get_option( 'wpm_o_host' ) )
             return;
 
-        // Base CSS dir
-        $icon_base = esc_url( plugins_url( 'images/' , __FILE__ ) );
-        
-        // Echo following CSS anywhere in wp-admin for nav.
-        ?> <style type="text/css" media="screen">
-            #toplevel_page_video-user-manuals-plugin .wp-menu-image { background: url(<?php echo $icon_base; ?>/vum_flat_grey.png) no-repeat 10px !important; }
-            #toplevel_page_video-user-manuals-plugin:hover .wp-menu-image { background: url(<?php echo $icon_base; ?>/vum_flat_blue.png) no-repeat 10px !important; }
-            #toplevel_page_video-user-manuals-plugin .wp-menu-open .wp-menu-image { background: url(<?php echo $icon_base; ?>/vum_flat_white.png) no-repeat 10px !important; }
-        </style> <?php
-    }
-    
-    function admin_init()
-    {
-        // Register the style
-        wp_register_style( 'vumcss', plugins_url( 'vum.css' , __FILE__ ), array(), self::pluginver );
+        // Show only on home page
+        if( ! is_front_page() )
+            return;
 
-        // Check if just installed, redirect to activation.
-        if ( get_option('wpm_o_just_installed') ) {
-            delete_option('wpm_o_just_installed');
-            wp_redirect( admin_url( 'admin.php?page=vum-activation' ) );
-            exit;
-        }
-
-        // If serial is set, but the lang isn't
-        if( $this->serial && !get_option('wpm_o_lang') ) {
-
-            // If the heading is there, then this must be legacy, so set lang to AU english, else, try WP default.
-            if( get_option('wpm_o_custom_video_title') )
-            {
-                update_option('wpm_o_lang', 'en-au' );
-            }
-            else
-            {
-            	$lang = explode('-', strtolower( get_bloginfo('language') ) );
-            	$lang = ($lang[0]==$lang[1] ? $lang[0] : strtolower( get_bloginfo('language') ) );
-                update_option('wpm_o_lang', $lang );
-            }
-        }
-
+        // Output the version
+        echo '<meta name="vum" content="' . self::pluginver. '" />' . "\n";
     }
 
-    function add_pages()
-    {
-        $location = ( get_option('wpm_o_move_menu_item') ? '2.1' : null );
-        
-        $custom_title = get_option('wpm_o_custom_menu_name') ? get_option('wpm_o_custom_menu_name') : $this->terms( 'Manual' );
-        
-        $access = get_option( 'wpm_o_view_access' ) ? 'edit_posts' : 'read';
-        
-        // If equal or less than 3.7, show old icon. For newer WP, show CSS space.
-        $icon =  version_compare( get_bloginfo( 'version' ) , '3.8-beta' , '>=' ) ? 'div' : plugins_url( 'images/vum-logo.png' , __FILE__ );
-         
-        $view_page = add_menu_page(
-                        $custom_title,
-                        $custom_title,
-                        $access, 
-                        __FILE__,
-                        array( $this,'display' ),
-                        $icon,
-                        $location
-                    );
+	/**
+	 * Enques JS we need in admin.
+	 */
+	function admin_scripts() {
 
-        add_action('load-'.$view_page, array( $this, 'pre_activation' ) );
-
-        // Dont want child pages to show if no serial
-        if( $this->serial ) {
-
-            add_submenu_page(
-                        __FILE__,
-                        $this->terms( 'Videos' ),
-                        $this->terms( 'Videos' ),
-                        $access,
-                        __FILE__,
-                        array( $this,'display' )
-                    );
-
-            if ( ! get_option( 'wpm_o_hide_manual' ) ) {
-            add_submenu_page(
-                        __FILE__,
-                        $this->terms( 'User Manual' ),
-                        $this->terms( 'User Manual' ),
-                        $access,
-                        'vum-ebook',
-                        array( $this, 'ebook' )
-                    );
-            }
-            
-            // If the setting is false (doesn't exist, or is set to no, OR there is a match. 
-            if ( ! get_option( 'wpm_o_user_menu_restrict' ) || get_option( 'wpm_o_user_menu_restrict' ) == get_current_user_id() ) {
-                $admin_page = add_submenu_page(
-                            __FILE__,
-                            $this->terms( 'Manual Options' ),
-                            $this->terms( 'Manual Options' ),
-                            'activate_plugins',
-                            'vum-options',
-                            array( $this,'admin' )
-                        );
-                add_action('load-'.$admin_page, array( $this, 'admin_preload' ) );
-                add_action( 'admin_print_styles-' . $admin_page, array( $this, 'admin_css' ) );
-            }
-        }
-
-        /* Dont want these pages in the menu, but still register the name & actions */
-        $reset_page = add_submenu_page(null, 'Reset', 'Reset VUM', 'activate_plugins', 'vum-reset',  array( $this,'reset' ) );
-        add_action('load-'.$reset_page, array( $this, 'do_reset') );
-
-        $activation_page = add_submenu_page( null, 'Activation', 'Activate VUM', 'activate_plugins', 'vum-activation',  array( $this,'activate' ) );
-        add_action('load-'.$activation_page, array( $this, 'do_activate' ) );
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'jquery-ui' );
+		wp_enqueue_script( 'jquery-ui-tabs' );
     }
 
-    function install()
-    {
+    /**
+     *  Adds plugin action links used to reset.
+     */
+	function plugin_links( $links ) {
+
+		$new_links   = array();
+		$new_links[] = '<a href="' . admin_url( 'options-general.php?page=vum-reset' ) . '">' . $this->terms( 'Reset' ) . '</a>';
+
+		return array_merge( $new_links, $links );
+	}
+
+	/**
+	 * Outputs to admin_head
+	 */
+	function admin_head() {
+
+		// This code is only required on WordPress 3.8+
+		if ( version_compare( get_bloginfo( 'version' ), '3.8-beta', '<' ) ) {
+			return;
+		}
+
+		// Base CSS dir
+		$icon_base = esc_url( plugins_url( 'images/', __FILE__ ) );
+
+		// Echo following CSS anywhere in wp-admin for nav.
+		?>
+		<style type="text/css" media="screen">
+			#toplevel_page_video-user-manuals-plugin .wp-menu-image {
+				background: url(<?php echo $icon_base; ?>/vum_flat_grey.png) no-repeat 10px !important;
+			}
+
+			#toplevel_page_video-user-manuals-plugin:hover .wp-menu-image {
+				background: url(<?php echo $icon_base; ?>/vum_flat_blue.png) no-repeat 10px !important;
+			}
+
+			#toplevel_page_video-user-manuals-plugin .wp-menu-open .wp-menu-image {
+				background: url(<?php echo $icon_base; ?>/vum_flat_white.png) no-repeat 10px !important;
+			}
+		</style> <?php
+	}
+
+	/**
+	 * Helper function to access what version this plugin is.
+	 * @return string
+	 */
+	function get_ver_key() {
+        return self::ver_key;
+    }
+
+	/**
+	 * Helper Function to return the constant.
+	 * @return string
+	 */
+	function get_plugin_ver() {
+		return self::pluginver;
+	}
+
+	/**
+	 * Helper function to access the API URL.
+	 * @return string
+	 */
+	function get_api_url() {
+        return self::api_url;
+    }
+
+	/**
+	 * Our admin_init calls.
+	 */
+	function admin_init() {
+		// Load our DB upgrader class & run it.
+		require_once 'db-upgrades.php';
+		new VUM_DB_Upgrader( $this );
+
+		// Register the style
+		wp_register_style( 'vumcss', plugins_url( 'vum.css', __FILE__ ), array(), self::pluginver );
+
+		// Check if just installed, redirect to activation.
+		if ( get_option( 'wpm_o_just_installed' ) ) {
+			delete_option( 'wpm_o_just_installed' );
+			wp_redirect( admin_url( 'admin.php?page=vum-activation' ) );
+			exit;
+		}
+
+		// If serial is set, but the lang isn't
+		if ( $this->serial && ! get_option( 'wpm_o_lang' ) ) {
+
+			// If the heading is there, then this must be legacy, so set lang to AU english, else, try WP default.
+			if ( get_option( 'wpm_o_custom_video_title' ) ) {
+				update_option( 'wpm_o_lang', 'en-au' );
+			} else {
+				$lang = explode( '-', strtolower( get_bloginfo( 'language' ) ) );
+				$lang = ( $lang[0] == $lang[1] ? $lang[0] : strtolower( get_bloginfo( 'language' ) ) );
+				update_option( 'wpm_o_lang', $lang );
+			}
+		}
+
+	}
+
+	/**
+	 * Add Menu pages to WP-Admin
+	 */
+	function add_pages() {
+		$location = ( get_option( 'wpm_o_move_menu_item' ) ? '2.1' : null );
+
+		$custom_title = get_option( 'wpm_o_custom_menu_name' ) ? get_option( 'wpm_o_custom_menu_name' ) : $this->terms( 'Manual' );
+
+		$access = get_option( 'wpm_o_view_access' ) ? 'edit_posts' : 'read';
+
+		// If equal or less than 3.7, show old icon. For newer WP, show CSS space.
+		$icon = version_compare( get_bloginfo( 'version' ), '3.8-beta', '>=' ) ? 'div' : plugins_url( 'images/vum-logo.png', __FILE__ );
+
+		$view_page = add_menu_page(
+			$custom_title,
+			$custom_title,
+			$access,
+			__FILE__,
+			array( $this, 'display' ),
+			$icon,
+			$location
+		);
+
+		add_action( 'load-' . $view_page, array( $this, 'pre_activation' ) );
+
+		// Dont want child pages to show if no serial
+		if ( $this->serial ) {
+
+			add_submenu_page(
+				__FILE__,
+				$this->terms( 'Videos' ),
+				$this->terms( 'Videos' ),
+				$access,
+				__FILE__,
+				array( $this, 'display' )
+			);
+
+			if ( ! get_option( 'wpm_o_hide_manual' ) ) {
+				add_submenu_page(
+					__FILE__,
+					$this->terms( 'User Manual' ),
+					$this->terms( 'User Manual' ),
+					$access,
+					'vum-ebook',
+					array( $this, 'ebook' )
+				);
+			}
+
+			// If the setting is false (doesn't exist, or is set to no, OR there is a match.
+			if ( ! get_option( 'wpm_o_user_menu_restrict' ) || get_option( 'wpm_o_user_menu_restrict' ) == get_current_user_id() ) {
+				$admin_page = add_submenu_page(
+					__FILE__,
+					$this->terms( 'Manual Options' ),
+					$this->terms( 'Manual Options' ),
+					'activate_plugins',
+					'vum-options',
+					array( $this, 'admin' )
+				);
+				add_action( 'load-' . $admin_page, array( $this, 'admin_preload' ) );
+				add_action( 'admin_print_styles-' . $admin_page, array( $this, 'admin_css' ) );
+			}
+		}
+
+		/* Dont want these pages in the menu, but still register the name & actions */
+		$reset_page = add_submenu_page( null, 'Reset', 'Reset VUM', 'activate_plugins', 'vum-reset', array( $this, 'reset' ) );
+		add_action( 'load-' . $reset_page, array( $this, 'do_reset' ) );
+
+		$activation_page = add_submenu_page( null, 'Activation', 'Activate VUM', 'activate_plugins', 'vum-activation', array( $this, 'activate' ) );
+		add_action( 'load-' . $activation_page, array( $this, 'do_activate' ) );
+
+		$embed_page = add_submenu_page( null, 'Video Player', 'Video Player', 'read', 'vum-embed', array( $this, 'embed' ) );
+		add_action( 'load-' . $embed_page, array( $this, 'embed' ) );
+
+	}
+
+	/**
+	 * Install action
+	 */
+	function install() {
+        // Flag to know we need to finish setting  up VUM
         add_option( 'wpm_o_just_installed', true );
+
+        // Add the plugin version so an upgrade doesn't occur.
+        add_option( $this->get_ver_key(), self::pluginver );
     }
 
-    function do_reset()
-    {
-        $this->reset();
+	/**
+	 * Reset VUM Settings
+	 */
+	function do_reset() {
+		$this->reset();
 
-        wp_redirect( 'admin.php?page=vum-activation' );
-        exit;
-    }
-    function reset()
-    {
-        global $wpdb;
-        // Delete everything from wp_options where it's with our prefix.
-        $wpdb->query( "delete from $wpdb->options where option_name like 'wpm_o_%'");
-    }
+		wp_redirect( admin_url( 'admin.php?page=vum-activation' ) );
+		exit;
+	}
 
-    function admin_css()
-    {
-        wp_enqueue_style( 'vumcss' );
-    }
+	/**
+	 * Do the reset query.
+	 */
+	function reset() {
+		global $wpdb;
+		// Delete everything from wp_options where it's with our prefix.
+		$wpdb->query( "delete from $wpdb->options where option_name like 'wpm_o_%'" );
+	}
 
-    function display()
-    {
-        global $wpdb;
+	/**
+	 * Load our own CSS for admin.
+	 */
+	function admin_css() {
+		wp_enqueue_style( 'vumcss' );
+	}
 
-        $url                    = new stdClass;
-        $url->user_id           = $this->serial;
-        $url->plugin_version    = self::pluginver;
-        $url->wp_version        = get_bloginfo('version');
-        $url->lang              = get_option('wpm_o_lang');
+	/**
+	 * Used to display embeded videos.
+	 */
+	function embed() {
 
-        $url->branding_img      = get_option('wpm_o_branding_img');
-        $url->video_image       = get_option('wpm_o_custom_vid_placeholder');
+		require_once( 'views/embeded.php' );
+		die;
 
-        $sections = $wpdb->get_results("select option_name, option_value from $wpdb->options where option_name not like 'wpm_o_show_video_%' and option_name like 'wpm_o_show_%'");
-        $sectionsToShow='';
+	}
 
-        // Get all sections we ARE showing.
-        foreach($sections as $section) {
-            if( $section->option_value == '1' )
-                $sectionsToShow .= "\'".str_replace('wpm_o_show_', '', $section->option_name) . "\',";
-        }
+	/**
+	 * Display the VUM videos.
+	 */
+	function display() {
+		global $wpdb;
 
-        // Trim off last comma and put in URL array to pass to VUM.
-        $url->sectionsToShow = substr_replace($sectionsToShow ,'',-1);
+		$url                 = new stdClass;
+		$url->user_id        = $this->serial;
+		$url->plugin_version = self::pluginver;
+		$url->wp_version     = get_bloginfo( 'version' );
+		$url->lang           = get_option( 'wpm_o_lang' );
 
-        // Get all videos we are NOT showing
-        $videos = $wpdb->get_results("select option_name, option_value from $wpdb->options where option_name like 'wpm_o_show_video_%' and option_value = 0");
-        $vidsToHide='';
-        foreach($videos as $video) {
-                $vidsToHide .= str_replace('wpm_o_show_video_', '', $video->option_name) . ',';
-        }
+		$url->branding_img = get_option( 'wpm_o_branding_img' );
+		$url->video_image  = get_option( 'wpm_o_custom_vid_placeholder' );
 
-        // Trim off last comma and put in URL array to pass to VUM.
-        $url->vidsToHide = substr_replace($vidsToHide ,'',-1);
+		$sections       = $wpdb->get_results( "select option_name, option_value from $wpdb->options where option_name not like 'wpm_o_show_video_%' and option_name like 'wpm_o_show_%'" );
+		$sectionsToShow = '';
 
-        $url_params = '';
-        foreach($url as $k=>$v) {
-           if($v===FALSE)
-               $v='0';
-            $url_params .= $k . ':\'' . $v . '\',';
-        }
+		// Get all sections we ARE showing.
+		foreach ( $sections as $section ) {
+			if ( $section->option_value == '1' ) {
+				$sectionsToShow .= "\'" . str_replace( 'wpm_o_show_', '', $section->option_name ) . "\',";
+			}
+		}
 
-        /* Trim last character (a comma) from string */
-        $url_params = substr_replace($url_params ,'',-1);
+		// Trim off last comma and put in URL array to pass to VUM.
+		$url->sectionsToShow = substr_replace( $sectionsToShow, '', - 1 );
 
-        /* Local Videos */
+		// Get all videos we are NOT showing
+		$videos     = $wpdb->get_results( "select option_name, option_value from $wpdb->options where option_name like 'wpm_o_show_video_%' and option_value = 0" );
+		$vidsToHide = '';
+		foreach ( $videos as $video ) {
+			$vidsToHide .= str_replace( 'wpm_o_show_video_', '', $video->option_name ) . ',';
+		}
 
-        $show_local = get_option('wpm_o_num_local');
+		// Trim off last comma and put in URL array to pass to VUM.
+		$url->vidsToHide = substr_replace( $vidsToHide, '', - 1 );
 
-        if ( $show_local ) {
+		$url_params = '';
+		foreach ( $url as $k => $v ) {
+			if ( $v === FALSE ) {
+				$v = '0';
+			}
+			$url_params .= $k . ':\'' . $v . '\',';
+		}
 
-            $local_videos = array( );
-            $num_local = get_option( 'wpm_o_num_local' );
-            $local_title = get_option( 'wpm_o_local_title' );
-            $count = 1;
+		/* Trim last character (a comma) from string */
+		$url_params = substr_replace( $url_params, '', - 1 );
 
-            while ( $count <= $num_local ) {
+		/* Local Videos */
 
-                if ( get_option( 'wpm_o_localvideos_' . $count . '_loc' ) == 0 ) {
+		$show_local = get_option( 'wpm_o_num_local' );
 
-                    $local_videos[ $count ] = new stdClass();
-                    $local_videos[ $count ]->name = get_option( 'wpm_o_localvideos_' . $count . '_0' );
-                    $local_videos[ $count ]->thumb = get_option( 'wpm_o_localvideos_' . $count . '_1' );
-                    $local_videos[ $count ]->vid = get_option( 'wpm_o_localvideos_' . $count . '_2' );
-                    $local_videos[ $count ]->desc = get_option( 'wpm_o_localvideos_' . $count . '_3' );
-                    $local_videos[ $count ]->image = get_option( 'wpm_o_localvideos_' . $count . '_4' );
-                    $local_videos[ $count ]->embed = get_option( 'wpm_o_localvideos_' . $count . '_5' );
-                    $local_videos[ $count ]->doembed = get_option( 'wpm_o_localvideos_' . $count . '_6' );
+		if ( $show_local ) {
 
-                } else {
+			$local_videos = array();
+			$num_local    = get_option( 'wpm_o_num_local' );
+			$local_title  = get_option( 'wpm_o_local_title' );
+			$count        = 1;
 
-                    $custom_local_videos[ $count ] = new stdClass();
-                    $custom_local_videos[ $count ]->name = get_option( 'wpm_o_localvideos_' . $count . '_0' );
-                    $custom_local_videos[ $count ]->thumb = get_option( 'wpm_o_localvideos_' . $count . '_1' );
-                    $custom_local_videos[ $count ]->vid = get_option( 'wpm_o_localvideos_' . $count . '_2' );
-                    $custom_local_videos[ $count ]->desc = get_option( 'wpm_o_localvideos_' . $count . '_3' );
-                    $custom_local_videos[ $count ]->image = get_option( 'wpm_o_localvideos_' . $count . '_4' );
-                    $custom_local_videos[ $count ]->embed = get_option( 'wpm_o_localvideos_' . $count . '_5' );
-                    $custom_local_videos[ $count ]->doembed = get_option( 'wpm_o_localvideos_' . $count . '_6' );
-                    $custom_local_videos[ $count ]->loc = get_option( 'wpm_o_localvideos_' . $count . '_loc' );
+			while ( $count <= $num_local ) {
 
-                }
+				if ( get_option( 'wpm_o_localvideos_' . $count . '_loc' ) == 0 ) {
 
-                $count++;
-            }
-        }
+					$local_videos[$count]          = new stdClass();
+					$local_videos[$count]->name    = get_option( 'wpm_o_localvideos_' . $count . '_0' );
+					$local_videos[$count]->thumb   = get_option( 'wpm_o_localvideos_' . $count . '_1' );
+					$local_videos[$count]->vid     = get_option( 'wpm_o_localvideos_' . $count . '_2' );
+					$local_videos[$count]->desc    = get_option( 'wpm_o_localvideos_' . $count . '_3' );
+					$local_videos[$count]->image   = get_option( 'wpm_o_localvideos_' . $count . '_4' );
+					$local_videos[$count]->embed   = get_option( 'wpm_o_localvideos_' . $count . '_5' );
+					$local_videos[$count]->doembed = get_option( 'wpm_o_localvideos_' . $count . '_6' );
 
-        require_once( 'views/videos.php' );
-    }
+				} else {
 
-    function display_vid($video_id, $video)
-    {
-            $src = stripslashes(get_option('wpm_o_localvideos_'.$video_id.'_5'));
-            preg_match('/width="(\d+)(px)?" height="(\d+)(px)?"/', $src, $matches);
+					$custom_local_videos[$count]          = new stdClass();
+					$custom_local_videos[$count]->name    = get_option( 'wpm_o_localvideos_' . $count . '_0' );
+					$custom_local_videos[$count]->thumb   = get_option( 'wpm_o_localvideos_' . $count . '_1' );
+					$custom_local_videos[$count]->vid     = get_option( 'wpm_o_localvideos_' . $count . '_2' );
+					$custom_local_videos[$count]->desc    = get_option( 'wpm_o_localvideos_' . $count . '_3' );
+					$custom_local_videos[$count]->image   = get_option( 'wpm_o_localvideos_' . $count . '_4' );
+					$custom_local_videos[$count]->embed   = get_option( 'wpm_o_localvideos_' . $count . '_5' );
+					$custom_local_videos[$count]->doembed = get_option( 'wpm_o_localvideos_' . $count . '_6' );
+					$custom_local_videos[$count]->loc     = get_option( 'wpm_o_localvideos_' . $count . '_loc' );
 
-            $width =  ( isset($matches[1]) ? intval($matches[1]) : get_option('wpm_o_local_video_width') );
-            $height =  ( isset($matches[3]) ? intval($matches[3]) : get_option('wpm_o_local_video_height') );
+				}
 
-            if( $video->doembed == '1' ) {
-                $onclick = 'window.open(\''.$this->pluginURL . '/embeded.php?wpmvid=' . $video_id . '&amp;video_thumb='.$video->image.'&amp;width=' . ( $width+25 ) . '&amp;height=' . $height . '\',\'welcome\',\'width=' . ( $width + 50 ) . ', height='.( $height + 50 ).',menubar=0,status=0,location=0,toolbar=0,scrollbars=0\')';
-            } else {
-                $onclick = 'window.open(\''. self::vum_domain . '/video-player.php?video_url=' . $video->vid . '&amp;video_thumb='.$video->image.'&amp;width=' . ( $width+25 ) . '&amp;height=' . $height . '\',\'welcome\',\'width=' . ( $width + 50 ) . ', height='.( $height + 50 ).',menubar=0,status=0,location=0,toolbar=0,scrollbars=0\')';
-            }
+				$count ++;
+			}
+		}
 
-            $var = '<div class="video-container">';
-            $var .=  '<a href="javascript:void(0)" onclick="'.$onclick.'">';
-            $var .= '<img src="'.$video->thumb.'" alt="'.stripslashes( $video->name ).'" width="240" height="150" /><br />';
-            $var .= stripslashes( $video->name );
-            $var .= '</a>';
-            $var .= '</div>';
+		require_once( 'views/videos.php' );
+	}
 
-            return $var;
-    }
+	/**
+	 *
+	 * Helper function to display a VUM video.
+	 *
+	 * @param $video_id
+	 * @param $video
+	 *
+	 * @return string/HTML
+	 */
+	function display_vid( $video_id, $video ) {
+		$src = stripslashes( get_option( 'wpm_o_localvideos_' . $video_id . '_5' ) );
+		preg_match( '/width="(\d+)(px)?" height="(\d+)(px)?"/', $src, $matches );
 
-    function ebook()
-    {
-        $wpm_urlvars = "lang:'".get_option('wpm_o_lang')."',wp_version:'".get_bloginfo('version')."', user_id:'".get_option('wpm_o_user_id')."',custom_ebook_img:'".get_option('wpm_o_custom_ebook_img')."'";
+		$width  = ( isset( $matches[1] ) ? intval( $matches[1] ) : get_option( 'wpm_o_local_video_width' ) );
+		$height = ( isset( $matches[3] ) ? intval( $matches[3] ) : get_option( 'wpm_o_local_video_height' ) );
 
-?>
-	<div id="manual-page" class="wrap">
+		if ( $video->doembed == '1' ) {
+			$onclick = 'window.open(\'' . admin_url( 'admin.php?page=vum-embed' ) . '&wpmvid=' . $video_id . '&amp;video_thumb=' . $video->image . '&amp;width=' . ( $width + 25 ) . '&amp;height=' . $height . '\',\'welcome\',\'width=' . ( $width + 50 ) . ', height=' . ( $height + 50 ) . ',menubar=0,status=0,location=0,toolbar=0,scrollbars=0\')';
+		} else {
+			$onclick = 'window.open(\'' . self::vum_domain . '/video-player.php?video_url=' . $video->vid . '&amp;video_thumb=' . $video->image . '&amp;width=' . ( $width + 25 ) . '&amp;height=' . $height . '\',\'welcome\',\'width=' . ( $width + 50 ) . ', height=' . ( $height + 50 ) . ',menubar=0,status=0,location=0,toolbar=0,scrollbars=0\')';
+		}
 
-             
-            <h2 style="margin-bottom:8px">
-            <?php
-            if( get_option('wpm_o_plugin_custom_logo') )
-                echo '<img src="'.get_option('wpm_o_plugin_custom_logo').'" alt="logo" style="vertical-align: -7px">&nbsp; ';
-            
-            echo get_option('wpm_o_plugin_heading_user'); ?>
-            </h2>
+		$var = '<div class="video-container">';
+		$var .= '<a href="javascript:void(0)" onclick="' . $onclick . '">';
+		$var .= '<img src="' . $video->thumb . '" alt="' . stripslashes( $video->name ) . '" width="240" height="150" /><br />';
+		$var .= stripslashes( $video->name );
+		$var .= '</a>';
+		$var .= '</div>';
 
-            <div id="ajax_msg"></div>
-            <div id="ajax_content"></div>
-            <script type="text/javascript">
-                jQuery.getJSON('<?php echo is_ssl() ? str_replace( 'http://', 'https://', self::vum_domain ) : self::vum_domain; ?>/online-manual.php?jsoncallback=?',
-                        {<?php echo $wpm_urlvars;?>},
-                        function(data, textStatus){
-                                jQuery('#ajax_content').append(data);
-                        });
+		return $var;
+	}
 
-            </script>
-        </div>
-    <?php
-    }
+	/**
+	 * VUM EBook Admin Page
+	 */
+	function ebook() {
+		$wpm_urlvars = "lang:'" . get_option( 'wpm_o_lang' ) . "',wp_version:'" . get_bloginfo( 'version' ) . "', user_id:'" . get_option( 'wpm_o_user_id' ) . "',custom_ebook_img:'" . get_option( 'wpm_o_custom_ebook_img' ) . "'";
+
+		?>
+		<div id="manual-page" class="wrap">
+
+
+			<h2 style="margin-bottom:8px">
+				<?php
+				if ( get_option( 'wpm_o_plugin_custom_logo' ) ) {
+					echo '<img src="' . get_option( 'wpm_o_plugin_custom_logo' ) . '" alt="logo" style="vertical-align: -7px">&nbsp; ';
+				}
+
+				echo get_option( 'wpm_o_plugin_heading_user' ); ?>
+			</h2>
+
+			<div id="ajax_msg"></div>
+			<div id="ajax_content"></div>
+			<script type="text/javascript">
+				jQuery.getJSON('<?php echo is_ssl() ? str_replace( 'http://', 'https://', self::vum_domain ) : self::vum_domain; ?>/online-manual.php?jsoncallback=?',
+					{<?php echo $wpm_urlvars;?>},
+					function (data, textStatus) {
+						jQuery('#ajax_content').append(data);
+					});
+
+			</script>
+		</div>
+	<?php
+	}
+
     function defineForm()
     {
         // Updadate prefs
@@ -365,7 +471,7 @@ class Vum{
         $form = new Vum_form( 'Video User Manuals Settings' );
 
         $form->setPluginURL($this->pluginURL);
-        
+
         $form->openTab( 'Branding &amp; Customization' );
 
         $form->addDropdown(
@@ -375,7 +481,7 @@ class Vum{
                         $this->formPrefs->langs,
                         strtolower( get_bloginfo('language') ) // Use WP Lang as default
                 );
- 
+
         $form->addRadioGroup(
                         'user_menu_restrict',
                         'Restrict VUM Settings',
@@ -383,35 +489,35 @@ class Vum{
                         array( get_current_user_id() => 'Yes', 0 => 'No' ),
                         0
                 );
-        
+
         $form->addYesNo(
                         'hide_manual',
                         'Hide the User Manual',
                         'You can remove the written User Manual option from the admin sidebar if you want. ',
                         0
                 );
-        
+
         $form->addYesNo(
                         'move_menu_item',
                         'Menu up top?',
                         'The Menu item can go up under the dashboard rather than down the bottom',
                         0
                 );
-        
+
         $form->addYesNo(
                         'view_access',
                         'Hide from subscribers',
                         'Hide Video User Manuals from anyone who doesnt have edit_posts access.',
                         1
                 );
-        
+
         $form->addTextbox(
                         'custom_menu_name',
                         'Change Menu Name',
                         'Change the menu name in the sidebar from Manual to what ever you want.',
                         $this->terms( 'Manual' )
                 );
-        
+
         $form->addTextbox(
                         'plugin_heading_video',
                         'Heading on the videos page',
@@ -564,7 +670,7 @@ class Vum{
                 );
 
              $form->addClass( $id, 'embed_selector' );
-             
+
              $form->openSection( '', 'localvideos_' . $count . '_6' );
 
              $form->addTextarea(
@@ -588,7 +694,7 @@ class Vum{
                 );
              if( $form->getVal( 'localvideos_' . $count . '_6' ) )
                 $form->addClass( $id, 'wpm-hidden' );
-             
+
              $id = $form->addTextbox(
                         'localvideos_' . $count . '_3',
                         'Description Of Video',
@@ -604,7 +710,7 @@ class Vum{
                 );
              if( $form->getVal( 'localvideos_' . $count . '_6' ) )
                 $form->addClass( $id, 'wpm-hidden' );
-             
+
             $count++;
         }
 
@@ -659,10 +765,10 @@ class Vum{
 
         if( isset( $_GET[ 'saved' ] ) )
             $this->notice( 'Settings saved.' );
-        
+
         if( isset( $_GET[ 'master_profile' ] ) )
             $this->notice( 'Settings saved and your master profile has been updated' );
-        
+
         // Display the form
         $this->form->display();
 
@@ -697,7 +803,7 @@ class Vum{
         $url_params = substr_replace($url_params ,'',-1);
 
         $response = wp_remote_get( apply_filters( 'vum_prefs', self::prefs_url . $url_params ) );
-        
+
         if (is_wp_error($response))
         {
             update_option( 'wpm_o_form_prefs', 'error' );
@@ -753,7 +859,7 @@ class Vum{
 
             // Get all settings stored in the options table prefixed with VUM's prefix.
             $settings = $wpdb->get_results("select option_name, option_value from $wpdb->options where option_name like 'wpm_o_%'");
-            
+
             // Store in serialized array to pass back to VUM server.
             $settings = serialize($settings);
 
@@ -775,7 +881,7 @@ class Vum{
 
         }
 
-        // If we saved master profile - set a URL flag. 
+        // If we saved master profile - set a URL flag.
         $master_profile_tag = ( isset( $_POST['set_master_profile'] ) ? '&master_profile=saved' : '' );
 
         if( isset( $_POST['return'] ) && $_POST['return'] )
@@ -791,101 +897,125 @@ class Vum{
     {
         /* If Submit - lets check the serial */
         if( isset($_POST['serial']) ) {
-        
-            /* Push the data to the activation to the server */
-            $response = wp_remote_get( apply_filters( 'vum_activate', self::activate_url . trim( $_POST['serial'] ) . '&url=' . $this->domain ) );
-        
-            if( is_wp_error( $response ) )
-            {
-                $this->activation_error = 'Sorry, we were unable to contact our activaction server. Please try again soon.';
-            }
-            else
-            {
-                if( $response['body'] == 'OK-PREFS' ) {
 
-                    //
-                    //  Add Serial
-                    update_option( 'wpm_o_user_id', trim($_POST['serial']) );
+			$json = json_encode( array(
+					'command'		 => 'activate',
+					'license' 		 => trim( $_POST['serial'] ),
+					'domain'		 => $this->domain,
+					'plugin_version' => self::pluginver,
+					'wpurl'		 	 => get_bloginfo( 'wpurl' )
+				)
+			);
 
-                    // We are going to apply the profile?
-                    if( isset( $_POST['applyProfile'] ) ) {
+			/* Push the data to the activation to the server */
+			$response = wp_remote_post( apply_filters( 'vum_activate', self::api_url ), array(
+					'method' => 'POST',
+					'body' => array( 'json' => $json ),
+				)
+			);
 
-                        $response = wp_remote_get( apply_filters( 'vum_activate', self::activate_url . trim( $_POST['serial'] ) . '&apply=true' . '&url=' . $this->domain ) );
+			if ( is_wp_error( $response ) ) {
 
-                        $body = wp_remote_retrieve_body( $response );
+				$this->activation_error = 'Sorry, we were unable to contact our activation server. Please try again soon.';
 
-                        $settings = unserialize( stripslashes($body) );
+			} else {
 
-                        foreach($settings as $s) {
-                            
-                            if( ( $s->option_name == 'wpm_o_user_menu_restrict' ) && ( $s->option_value != '0' ) ) {
-                                $s->option_value = get_current_user_id();
-                            }
-                            
-                            update_option($s->option_name, $s->option_value);
-                        }
+				// Decode our JSON response from the API.
+				$api_reply = json_decode( wp_remote_retrieve_body( $response ) );
 
-                    }
+				// If this serial belongs to a hosting company, set that in the DB, then carry on.
+				if ( isset( $api_reply->is_host ) && $api_reply->is_host == 'true' ) {
 
-                    wp_redirect( 'admin.php?page=vum-options' );
-                    exit;
+					// Note in the DB this is a host serial number.
+					update_option( 'wpm_o_host', true );
+				}
 
-                } elseif( $response['body'] == 'OK' ) {
-                    update_option( 'wpm_o_user_id', trim($_POST['serial']) );
-                    wp_redirect( 'admin.php?page=vum-options' );
-                    exit;
-                    
-                } elseif( $response['body'] == 'OVER-QUOTA' ) {
-                    $this->activation_error = 'Sorry, we were unable match this serial number as you have exeeded your license quota. <a target="_blank" href="http://www.videousermanuals.com/singlehelp/">Please contact us if you need assistance.</a>';
-                    
-                } else {
-                    $this->activation_error = 'Sorry, we were unable match this serial number. Did you enter it correctly?';
-                    
-                }
-            }
+				if ( isset( $api_reply->has_prefs ) && $api_reply->has_prefs == 'true' ) {
+
+					//  Add Serial
+					update_option( 'wpm_o_user_id', trim( $_POST['serial'] ) );
+
+					// We are going to apply the profile?
+					if ( isset( $_POST['applyProfile'] ) ) {
+
+						$response = wp_remote_get( apply_filters( 'vum_activate', self::activate_url . trim( $_POST['serial'] ) . '&apply=true' . '&url=' . $this->domain ) );
+
+						$body = wp_remote_retrieve_body( $response );
+
+						$settings = unserialize( stripslashes( $body ) );
+
+						foreach ( $settings as $s ) {
+
+							if ( ( $s->option_name == 'wpm_o_user_menu_restrict' ) && ( $s->option_value != '0' ) ) {
+								$s->option_value = get_current_user_id();
+							}
+
+							update_option( $s->option_name, $s->option_value );
+						}
+					}
+
+					wp_redirect( admin_url( 'admin.php?page=vum-options' ) );
+					exit;
+
+				} elseif ( $api_reply->result == 'active' ) {
+
+					update_option( 'wpm_o_user_id', trim( $_POST['serial'] ) );
+					wp_redirect( admin_url( 'admin.php?page=vum-options' ) );
+					exit;
+
+				} elseif ( $api_reply->result == 'over-quota' ) {
+					$this->activation_error = 'Sorry, we were unable match this serial number as you have exeeded your license quota. <a target="_blank" href="http://www.videousermanuals.com/singlehelp/">Please contact us if you need assistance.</a>';
+
+				} elseif ( $api_reply->result == 'expired' ) {
+					$this->activation_error = 'Sorry, It appears your license has expired. Please <a href="https://videousermanuals.desk.com/">contact us</a> if you quire assistance. ';
+
+				} else {
+					$this->activation_error = 'Sorry, we were unable match this serial number. Did you enter it correctly?';
+
+				}
+			}
         }
     }
 
-    function activate()
-    {
-        if( isset( $this->activation_error ) )
-            $this->notice ( $this->activation_error );
+	function activate() {
+		if ( isset( $this->activation_error ) ) {
+			$this->notice( $this->activation_error );
+		}
 
-        if( is_multisite() )
-            $this->notice( 'As this is a Multi-site installation, you will have to active VUM for each site.' );
+		if ( is_multisite() ) {
+			$this->notice( 'As this is a Multi-site installation, you will have to activate VUM for each site.' );
+		}
 
-        self::load('activate');
-    }
+		self::load( 'activate' );
+	}
 
-    function notice($message='')
-    {
-         echo '<div class="updated"><p>'.$message.'</p> </div>';
-    }
+	function notice( $message = '' ) {
+		echo '<div class="updated"><p>' . $message . '</p> </div>';
+	}
 
-    function load($viewName='')
-    {
-        require_once('views/'. $viewName .'.php' );
-    }
+	function load( $viewName = '' ) {
+		require_once( 'views/' . $viewName . '.php' );
+	}
 
-    function update_plugin()
-    {
-        if( isset( $_GET['plugin'] ) && $_GET['plugin'] == 'video-user-manuals')
-            add_action('admin_head', array( $this, 'hide_stuff' ) );
-    }
+	function update_plugin() {
+		if ( isset( $_GET['plugin'] ) && $_GET['plugin'] == 'video-user-manuals' ) {
+			add_action( 'admin_head', array( $this, 'hide_stuff' ) );
+		}
+	}
 
-    function hide_stuff()
-    {
-        echo '<style> .fyi ul, .fyi h2, .star-holder, small{display:none} </style>';
-    }
+	function hide_stuff() {
+		echo '<style> .fyi ul, .fyi h2, .star-holder, small{display:none} </style>';
+	}
 }
 
-require_once('updater.php');
+require_once( 'updater.php' );
+
 $updateVUM = new VUM_PluginUpdateChecker(
 	'http://wordpress.videousermanuals.com/video-user-manuals/info.json',
 	__FILE__,
-        'video-user-manuals',
-        12,
-        'wpm_external_updater'
+	'video-user-manuals',
+	12,
+	'wpm_external_updater'
 );
 
 $vum = new Vum();

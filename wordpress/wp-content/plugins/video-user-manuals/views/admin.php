@@ -27,7 +27,7 @@
         
         var selected = jQuery(this).val();
         
-        if( selected == 'pt' || selected == 'es' || selected == 'it' || selected == 'fr' || selected == 'de' ) {
+        if( selected == 'pt' || selected == 'it' || selected == 'fr' || selected == 'de' ) {
             alert( "We no longer support this language. This language will be removed on April 1st 2014, until then WordPress 3.7 videos will appear." );
         }
         
