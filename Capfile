@@ -117,7 +117,7 @@ namespace :db do
       if "#{stage}" == "prod"
         search = "#{application}.com"
       else
-        search = "#{stage}.#{application}.com"
+        search = "#{application}.#{staging_domain}.com"
       end
       replace = local_domain
       puts "searching (#{search}) and replacing (#{replace}) domain information"
