@@ -185,9 +185,9 @@ namespace :files do
   task :push, :roles => :web do
     domains.each do |domain|
       if exists?(:gateway)
-        run_locally("rsync --recursive --times --omit-dir-times --chmod=ugo=rwX --rsh='ssh #{ssh_options[:user]}@#{gateway} ssh  #{ssh_options[:user]}@#{find_servers(:roles => :web).first.host}' --compress --human-readable --progress --exclude 'webroot/plugins' --exclude 'webroot/themes' webroot/wp-content/ :#{deploy_to}/#{shared_dir}/#{domain}/files/")
+        run_locally("rsync --recursive --times --omit-dir-times --chmod=ugo=rwX --rsh='ssh #{ssh_options[:user]}@#{gateway} ssh  #{ssh_options[:user]}@#{find_servers(:roles => :web).first.host}' --compress --human-readable --progress --exclude 'wordpress/plugins' --exclude 'wordpress/themes' wordpress/wp-content/ :#{deploy_to}/#{shared_dir}/#{domain}/files/")
       else
-        run_locally("rsync --recursive --times --omit-dir-times --chmod=ugo=rwX --rsh=ssh --compress --human-readable --progress --exclude 'webroot/plugins' --exclude 'webroot/themes' webroot/wp-content/ #{ssh_options[:user]}@#{find_servers(:roles => :web).first.host}:#{deploy_to}/#{shared_dir}/#{domain}/files/")
+        run_locally("rsync --recursive --times --omit-dir-times --chmod=ugo=rwX --rsh=ssh --compress --human-readable --progress --exclude 'wordpress/plugins' --exclude 'wordpress/themes' wordpress/wp-content/ #{ssh_options[:user]}@#{find_servers(:roles => :web).first.host}:#{deploy_to}/#{shared_dir}/#{domain}/files/")
       end
     end
   end
