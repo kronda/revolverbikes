@@ -317,8 +317,8 @@ function ninja_forms_get_sub_count( $args = array() ) {
 		$where .= "date_updated < '".$end_date."'";
 	}
 
-	$subs_results = $wpdb->get_results($wpdb->prepare("SELECT COUNT(*) FROM ".NINJA_FORMS_SUBS_TABLE_NAME." WHERE ".$where." ORDER BY `date_updated`", NINJA_FORMS_SUBS_TABLE_NAME), ARRAY_A);
-
+	$subs_results = $wpdb->get_results( "SELECT COUNT(*) FROM ".NINJA_FORMS_SUBS_TABLE_NAME." WHERE " . $where . " ORDER BY `date_updated`" , ARRAY_A );
+	
 	return $subs_results[0]['COUNT(*)'];
 
 }
@@ -407,7 +407,7 @@ function ninja_forms_get_subs($args = array()){
 		unset($args['limit']);
 	}
 
-	$subs_results = $wpdb->get_results($wpdb->prepare("SELECT * FROM ".NINJA_FORMS_SUBS_TABLE_NAME." WHERE ".$where." ORDER BY `date_updated` DESC ".$limit, NINJA_FORMS_SUBS_TABLE_NAME), ARRAY_A);
+	$subs_results = $wpdb->get_results( "SELECT * FROM ".NINJA_FORMS_SUBS_TABLE_NAME." WHERE " . $where . " ORDER BY `date_updated` DESC ".$limit, ARRAY_A );
 
 	if(is_array($subs_results) AND !empty($subs_results)){
 		$x = 0;

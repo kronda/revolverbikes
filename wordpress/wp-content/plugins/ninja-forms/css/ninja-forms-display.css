@@ -84,7 +84,7 @@ a.tooltip span
 
 .field-wrap,
 #ninja_forms_required_items {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 #pass-strength-result {
@@ -134,12 +134,6 @@ a.tooltip span
     height: auto;
     vertical-align: inherit;
 }
-
-.ninja-forms-form-wrap input,
-.ninja-forms-form-wrap textarea {
-    padding: 5px;
-}
-
 
 .ninja-forms-form-wrap label {
     font-weight: bold;
@@ -209,7 +203,7 @@ TEXT FIELDS & TEXTAREAS
 }
 
 .textarea-wrap textarea {
-    height: 100px;
+    height: 200px;
 }
 
 .profile_pass-wrap input {
