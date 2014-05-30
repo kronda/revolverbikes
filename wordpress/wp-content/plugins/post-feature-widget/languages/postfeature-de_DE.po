@@ -1,0 +1,344 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Post-Feature-Widget\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/post-feature-widget\n"
+"POT-Creation-Date: 2014-04-27 14:03+0200\n"
+"PO-Revision-Date: 2014-04-27 14:03+0200\n"
+"Last-Translator: Waldemar Stoffel <stoffel@atelier-fuenf.de>\n"
+"Language-Team: Waldemar Stoffel <info@waldemarstoffel.com>\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.6.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: class-lib/A5_ImageClass.php:47
+msgid "Permalink to"
+msgstr "Link zu:"
+
+#: class-lib/A5_OptionPageClass.php:31 class-lib/FP_AdminClass.php:48
+#: postfeature.php:114
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: class-lib/A5_OptionPageClass.php:112
+msgid "Click to toggle"
+msgstr "Zum Umschalten klicken"
+
+#: class-lib/FP_AdminClass.php:61
+msgid ""
+"http://wasistlos.waldemarstoffel.com/plugins-fur-wordpress/featured-post-"
+"widget"
+msgstr "http://blog.atelier-fuenf.de/wordpress-plugins/featured-post-widget"
+
+#: class-lib/FP_AdminClass.php:61
+msgid "Plugin Support"
+msgstr "Plugin Support"
+
+#: class-lib/FP_AdminClass.php:73
+msgid "Debug Info"
+msgstr "Info zur Fehlersuche"
+
+#: class-lib/FP_AdminClass.php:100
+msgid "Styling of the widgets"
+msgstr "Styling der Widgets"
+
+#: class-lib/FP_AdminClass.php:102
+msgid "Widget container:"
+msgstr "Widget Container:"
+
+#: class-lib/FP_AdminClass.php:102
+msgid ""
+"You can enter your own style for the widgets here. This will overwrite the "
+"styles of your theme."
+msgstr ""
+"Du kannst deinen eigenen Stil für die Widgets hier eingeben. Das wird die "
+"Stile deines Themes überschreiben."
+
+#: class-lib/FP_AdminClass.php:102
+msgid ""
+"If you leave this empty, you can still style every instance of the widget "
+"individually."
+msgstr ""
+"Wenn du das Feld leer lässt, kannst du immer noch jede Instanz des Widgets "
+"individuell stylen."
+
+#: class-lib/FP_AdminClass.php:104
+msgid "Compress Style Sheet:"
+msgstr "Stylesheet Komprimieren:"
+
+#: class-lib/FP_AdminClass.php:104
+msgid "Click here to compress the style sheet."
+msgstr "Anklicken, um das Stylesheet zu komprimieren."
+
+#: class-lib/FP_AdminClass.php:106
+msgid "Debug:"
+msgstr "Debug:"
+
+#: class-lib/FP_AdminClass.php:106
+msgid ""
+"If you can&#39;t reach the dynamical style sheet, you&#39;ll have to diplay "
+"the styles inline. By clicking here you can do so."
+msgstr ""
+"In manchen Fällen kann das virtuelle Style Sheet nicht erreicht werden. Ein "
+"Ablegen des CSS im Quellcode hilft dann. Hier klicken, um CSS inline zu "
+"schreiben."
+
+#: class-lib/FP_AdminClass.php:110
+msgid "entries"
+msgstr "Einträge"
+
+#: class-lib/FP_AdminClass.php:110
+msgid "entry"
+msgstr "Eintrag"
+
+#: class-lib/FP_AdminClass.php:112
+#, php-format
+msgid "Empty cache (%d %s):"
+msgstr "Cache leeren (%d %s):"
+
+#: class-lib/FP_AdminClass.php:112
+msgid "You can empty the plugin&#39;s cache here, if necessary."
+msgstr "Falls nötig, kannst du hier den Cache des Plugins leeren."
+
+#: class-lib/FP_AdminClass.php:120
+msgid "Just put some css code here."
+msgstr "Einfach css Code hier eingeben."
+
+#: class-lib/FP_AdminClass.php:166
+msgid "Cache emptied."
+msgstr "Cache geleert."
+
+#: class-lib/FP_WidgetClass.php:20
+msgid ""
+"You can feature a certain post in this widget and display it, where and "
+"however you want, in your widget areas. A backup post can be given to avoid "
+"dubble content."
+msgstr ""
+"Mit diesem Widget kannst du einen Artikel deiner Wahl ins Highlight stellen. "
+"Ein Backup-Artikel kann eingegeben werden, um doppelten Inhalt zu vermeiden."
+
+#: class-lib/FP_WidgetClass.php:99
+msgid "Above thumbnail"
+msgstr "Über dem Thumbnail"
+
+#: class-lib/FP_WidgetClass.php:99 class-lib/FP_WidgetClass.php:103
+msgid "Under thumbnail"
+msgstr "Unter dem Thumbnail"
+
+#: class-lib/FP_WidgetClass.php:99
+msgid "Under date"
+msgstr "Unter dem Datum"
+
+#: class-lib/FP_WidgetClass.php:99
+msgid "Don&#39;t show title"
+msgstr "Titel nicht Anzeigen"
+
+#: class-lib/FP_WidgetClass.php:101
+msgid "Under image"
+msgstr "Unter dem Artikelbild"
+
+#: class-lib/FP_WidgetClass.php:101
+msgid "Left of image"
+msgstr "Links vom Artikelbild"
+
+#: class-lib/FP_WidgetClass.php:101
+msgid "Right of image"
+msgstr "Rechts vom Artikelbild"
+
+#: class-lib/FP_WidgetClass.php:101
+msgid "Don&#39;t show excerpt"
+msgstr "Auszug nicht anzeigen"
+
+#: class-lib/FP_WidgetClass.php:103
+msgid "Above post"
+msgstr "Über dem Artikel"
+
+#: class-lib/FP_WidgetClass.php:103
+msgid "Under post"
+msgstr "Unter dem Artikel"
+
+#: class-lib/FP_WidgetClass.php:103
+msgid "Don&#39;t show date"
+msgstr "Datum nicht anzeigen"
+
+#: class-lib/FP_WidgetClass.php:111
+msgid "Title:"
+msgstr "Titel:"
+
+#: class-lib/FP_WidgetClass.php:112
+msgid "Choose here the post, you want to appear in the widget."
+msgstr "Wähle hier den Artikel aus, der im Widget erscheinen soll."
+
+#: class-lib/FP_WidgetClass.php:112 class-lib/FP_WidgetClass.php:113
+msgid "Take a random post"
+msgstr "Zufälligen Artikel auswählen"
+
+#: class-lib/FP_WidgetClass.php:113
+msgid ""
+"Choose here the backup post. It will appear, when a single post page shows "
+"the featured article."
+msgstr ""
+"Wähle hier den Artikel, der als Backup erscheinen soll, falls der erste "
+"Artikel angezeigt wird."
+
+#: class-lib/FP_WidgetClass.php:114
+msgid "Post ID (if you don&#39;t want to use the dropdown menu):"
+msgstr ""
+"Post ID (falls einen Custom Post Type anzeigen willst oder einfach das "
+"Dropdown-Menü nicht benutzen willst):"
+
+#: class-lib/FP_WidgetClass.php:115
+msgid "ID for backup post (if you don&#39;t want to use the dropdown menu):"
+msgstr ""
+"ID für den Backup-Artikel (falls einen Custom Post Type anzeigen willst oder "
+"einfach das Dropdown-Menü nicht benutzen willst):"
+
+#: class-lib/FP_WidgetClass.php:116
+msgid ""
+"I want to style the headline and the date in this widget with my own "
+"class(es)."
+msgstr ""
+"Ich möchte die Überschrift und das Datum in diesem Widget mit meiner eigenen "
+"Klasse stylen."
+
+#: class-lib/FP_WidgetClass.php:117
+msgid "Write here the name of your class for the headline:"
+msgstr "Schreibe hier den Namen deiner Klasse für die Überschrift:"
+
+#: class-lib/FP_WidgetClass.php:118
+msgid "Write here the name of your class for the date:"
+msgstr "Schreibe hier den Namen deiner Klasse für das Datum:"
+
+#: class-lib/FP_WidgetClass.php:119
+#, php-format
+msgid ""
+"To use an image of the post instead of the post thumbnail, enter the number "
+"of that image. The word %s will bring the last image of the post."
+msgstr ""
+"Um ein Artikelbild anstelle des Post Thumbnails anzuzeigen, gib die Nummer "
+"des Bildes an. Das Wort %s wird das letzte Bild des Artikels anzeigen."
+
+#: class-lib/FP_WidgetClass.php:120
+msgid "Width of the thumbnail (in px):"
+msgstr "Breite des Thumbnail (in px):"
+
+#: class-lib/FP_WidgetClass.php:121
+#, php-format
+msgid ""
+"If wanting a border around the image, write the style here. %s would make it "
+"a black border, 1px wide."
+msgstr ""
+"Wenn du einen Rahmen um das Bild willst, style es hier. %s sorgt für einen "
+"schwarzen, 1px weiten Rahmen."
+
+#: class-lib/FP_WidgetClass.php:122
+#, php-format
+msgid "Check to %snot%s display the thumbnail of the post."
+msgstr "Anklicken, wenn %skein%s Thumbnail gewünscht wird."
+
+#: class-lib/FP_WidgetClass.php:123
+msgid ""
+"Choose, whether or not to display the title and whether it comes above or "
+"under the thumbnail."
+msgstr ""
+"Wähle, ob der Titel angezeigt werden soll und ob er über oder unter dem "
+"Thumbnail ausgegeben wird."
+
+#: class-lib/FP_WidgetClass.php:124
+msgid "Weight of the Post Title:"
+msgstr "Gewicht der Überschrift:"
+
+#: class-lib/FP_WidgetClass.php:125
+msgid ""
+"Choose, whether or not to display the publishing date and whether it comes "
+"above or under the post."
+msgstr ""
+"Wähle, ob das Artikeldatum angezeigt werden soll, und ob es über oder unter "
+"dem Artikel zu sehen sein soll."
+
+#: class-lib/FP_WidgetClass.php:126
+msgid ""
+"If the excerpt of the post is not defined, by default the first 3 sentences "
+"of the post are shown. You can enter your own excerpt here, if you want."
+msgstr ""
+"Falls kein Auszug definiert ist, werden die ersten 3 Sätze des Artikels "
+"genommen. Hier kannst du einen eigenen Auszug eingeben."
+
+#: class-lib/FP_WidgetClass.php:127
+msgid ""
+"Choose, whether or not to display the excerpt and whether it comes under the "
+"thumbnail or next to it."
+msgstr ""
+"Wähle, ob der Auszug angezeigt werden soll, und ob er unter das Thumbnail "
+"kommt oder daneben."
+
+#: class-lib/FP_WidgetClass.php:128
+msgid "Check to have each sentence in a new line."
+msgstr "Anklicken, um jeden Satz in einer neuen Zeile zu haben."
+
+#: class-lib/FP_WidgetClass.php:129
+msgid ""
+"Check to suppress shortcodes in the widget (in case the content is showing)."
+msgstr ""
+"Anklicken, um Shortcode im Widget zu unterdrücken (falls der Artikel "
+"angezeigt wird)."
+
+#: class-lib/FP_WidgetClass.php:130
+msgid ""
+"Check to return the excerpt unfiltered (might avoid interferences with other "
+"plugins)."
+msgstr ""
+"Anklicken, um den Auszug ungefiltert zu bekommen (das könnte Interferenzen "
+"mit anderen Plugins vermeiden)."
+
+#: class-lib/FP_WidgetClass.php:131
+msgid ""
+"Check to have an additional &#39;read more&#39; link at the end of the "
+"excerpt."
+msgstr ""
+"Anklicken, um einen zusätzlichen &#39;mehr lesen&#39;-Link am Ende des "
+"Auszugs anzuzeigen."
+
+#: class-lib/FP_WidgetClass.php:132
+#, php-format
+msgid ""
+"Write here some text for the &#39;read more&#39; link. By default, it is %s:"
+msgstr ""
+"Schreibe hier einen Text für den &#39;mehr lesen&#39;-Link. Standard ist %s:"
+
+#: class-lib/FP_WidgetClass.php:133
+msgid ""
+"If you want to style the &#39;read more&#39; link, you can enter a class "
+"here."
+msgstr ""
+"Um den &#39;mehr lesen&#39;-Link zu stylen, einfach hier eine Klasse angeben."
+
+#: class-lib/FP_WidgetClass.php:134
+#, php-format
+msgid ""
+"Here you can finally style the widget. Simply type something like%sto get "
+"just a gray outline and a padding of 10 px. If you leave that section empty, "
+"your theme will style the widget."
+msgstr ""
+"Hier kannst du das Widget stylen, tippe einfach etwas wie,%sum eine graue "
+"Umrandung und einen inneren Abstand von 10 px zu bekommen. Wenn du das Feld "
+"leer lässt, wird dein Theme das Styling übernehmen."
+
+#: postfeature.php:103
+msgid "FAQ"
+msgstr "FAQ"
+
+#: postfeature.php:104
+msgid "Donate"
+msgstr "Spenden"
