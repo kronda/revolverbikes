@@ -1,0 +1,8 @@
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+/* TEAM */  
+  Developer: Kronda Adair / Karvel Digital 
+  Contact: kronda@karveldigital.com
+  Twitter: @karveldigital
+  From: Portland, OR
