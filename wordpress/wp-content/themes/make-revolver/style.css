@@ -26,3 +26,7 @@ You can find the style.scss in the /sass/ directory, and the generated file in /
 @import url('stylesheets/style.css');
 
 /* Your customizations go here */
+
+.header-bar.right-content .header-text {
+  font-size: 14px;
+}
